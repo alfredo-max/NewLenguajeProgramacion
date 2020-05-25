@@ -86,7 +86,7 @@ t_ESTADO = r'verdadero|falso'
 t_PARA = r'PARA'
 t_MIENTRAS = r'MIENTRAS'
 t_HAZ = r'HAZ'
-t_COMENTARIOS = r'\*\*[\w*\t*\n*\ *[:punct:]*]+\*\*'
+#t_COMENTARIOS = r'\*\*[\w*\t*\n*\ *[:punct:]*]+\*\*'
 t_COMILLA = r'\"'
 t_COMILLASIMPLE = r"\'"
 
