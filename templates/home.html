@@ -40,8 +40,11 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-6">
+                        <form method="POST" action="{{url_for('codigo')}}">
                         <label for="exampleFormControlTextarea1">escriba su codigo</label>
                         <textarea class="form-control " id="code" name="code" rows="20"></textarea>
+                        <input type="submit" value="Enviar">
+                    </form>
                     </div><!--Este escript es solo para prbar el editor
                         $(function() {
                                 $('div#froala-editor').froalaEditor({

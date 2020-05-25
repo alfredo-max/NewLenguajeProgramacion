@@ -1,4 +1,5 @@
 import ply.lex as lex
+from main import salida
 palabrasReservadas = {
     "imprimir": "IMPRIMIR",
     "leer": "LEER",
@@ -102,5 +103,6 @@ t_ignore = ' \t'  # Para ignorar los espacios
 
 def t_error(t):
     print(f'Caracter ilegal {t.value[0]!r}')
+    # return (f'Caracter ilegal {t.value[0]!r}')
     t.lexer.skip(1)
 
