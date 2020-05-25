@@ -1,14 +1,16 @@
 from tokens import *
 from ply.yacc import yacc
 
+errorSyntax = 0
+
 a = ' a = 67+(97+5); para(a=(678+8); a<=68;  a\n=a+1; ){ **soy un comentario \n multilinea** a=67; haz' \
     '{c = c+1;} mientras(c <= 67);}'
 lexer = lex.lex()
 
 lexer.input(a)
 
-for tok in lexer:
-    print(tok)
+#for tok in lexer:
+#    print(tok)
 
 
 def p_statements_multiple(p):
@@ -150,8 +152,13 @@ def p_lista_sentencia(p):
                     | sentencia
     """
 
+def p_error(p):
+    print("Syntax error!")
+    errorSyntax = 1
 
 parser = yacc()
 result = parser.parse(a)
 
-print(result)
+#print(f"Error lexico: {errorLexico}\nError Sintactico: {errorSyntax}")
+def Error():
+    return [errorLexico, errorSyntax]
