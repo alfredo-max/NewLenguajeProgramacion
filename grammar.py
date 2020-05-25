@@ -1,9 +1,8 @@
 from tokens import *
 from ply.yacc import yacc
 
-a = 'a = 67+(97+5); para(a=(678+8); a<=68; a=a+1; ){ a=67; haz{c = c+1;} mientras(c <= 67);}'
+a = ' a = 67+(97+5); para(a=(678+8); a<=68;  a\n=a+1; ){ **soy un comentario \n multilinea** a=67; haz {c = c+1;} mientras(c <= 67);}'
 lexer = lex.lex()
-
 lexer.input(a)
 
 for tok in lexer:
@@ -15,7 +14,6 @@ def p_statements_multiple(p):
     statements : statements statement
                | statements sentencia
                | sentencia
-
     '''
 
 
@@ -29,11 +27,16 @@ def p_asignamiento_statements(p):
     '''
     statement : asignacion
     '''
+def p_comentario_statements(p):
+    '''
+    statement : COMENTARIOS
+    '''
 
 def p_asignar(p):
     '''
         asignacion : ID ASIGNAR expr PUNTOYCOMA
     '''
+
 
 def p_tipodato(p):
     '''
@@ -137,16 +140,16 @@ def p_sentencia(p):
                     | sentencia_mientras
                     | sentencia_para
                     | statement
-
     """
 
 
 def p_lista_sentencia(p):
     """lista_sentencia : lista_sentencia sentencia
                     | sentencia
-
     """
 
 
 parser = yacc()
-parser.parse(a)
+result = parser.parse(a)
+
+print(result)

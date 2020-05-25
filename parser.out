@@ -2,7 +2,6 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
 Unused terminals:
 
-    COMENTARIOS
     COMILLA
     COMILLASIMPLE
 
@@ -14,8 +13,8 @@ Rule 2     statements -> statements sentencia
 Rule 3     statements -> sentencia
 Rule 4     statements -> statement
 Rule 5     statement -> asignacion
-Rule 6     asignacion -> ID ASIGNAR ID PUNTOYCOMA
-Rule 7     asignacion -> ID ASIGNAR tipodato PUNTOYCOMA
+Rule 6     statement -> COMENTARIOS
+Rule 7     asignacion -> ID ASIGNAR expr PUNTOYCOMA
 Rule 8     tipodato -> NUMERICO
 Rule 9     tipodato -> CARACTER
 Rule 10    tipodato -> ESTADO
@@ -27,7 +26,7 @@ Rule 15    expr -> NUMERICO
 Rule 16    expr -> CADENA
 Rule 17    expr -> CARACTER
 Rule 18    expr -> ESTADO
-Rule 19    expr -> NUMERICO MAS NUMERICO
+Rule 19    expr -> expr MAS expr
 Rule 20    expr -> NUMERICO MULTIPLICAR NUMERICO
 Rule 21    expr -> NUMERICO DIVIDIR NUMERICO
 Rule 22    expr -> NUMERICO MENOS NUMERICO
@@ -44,7 +43,7 @@ Rule 32    sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBL
 Rule 33    sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
 Rule 34    sentencia_mientras -> MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
 Rule 35    sentencia_mientras -> HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-Rule 36    sentencia_para -> PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK
+Rule 36    sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
 Rule 37    sentencia -> sentencia_si
 Rule 38    sentencia -> sentencia_mientras
 Rule 39    sentencia -> sentencia_para
@@ -54,10 +53,10 @@ Rule 42    lista_sentencia -> sentencia
 
 Terminals, with rules where they appear
 
-ASIGNAR              : 6 7 28
+ASIGNAR              : 7 28
 CADENA               : 11 16
 CARACTER             : 9 17
-COMENTARIOS          : 
+COMENTARIOS          : 6
 COMILLA              : 
 COMILLASIMPLE        : 
 DISTINTO             : 30
@@ -65,7 +64,7 @@ DIVIDIR              : 21
 DOSPUNTOS            : 12 13
 ESTADO               : 10 18
 HAZ                  : 35
-ID                   : 6 6 7 14
+ID                   : 7 14
 IGUALDAD             : 29
 IMPRIMIR             : 13
 LBLOCK               : 32 33 33 34 35 36
@@ -80,9 +79,9 @@ MENOS                : 22
 MIENTRAS             : 34 35
 MULTIPLICAR          : 20
 NO                   : 33
-NUMERICO             : 8 15 19 19 20 20 21 21 22 22
+NUMERICO             : 8 15 20 20 21 21 22 22
 PARA                 : 36
-PUNTOYCOMA           : 6 7 35 36 36 36
+PUNTOYCOMA           : 7 35 36
 RBLOCK               : 32 33 33 34 35 36
 RPAREN               : 23 32 33 34 35 36
 SI                   : 32 33
@@ -90,10 +89,10 @@ error                :
 
 Nonterminals, with rules where they appear
 
-asignacion           : 5
+asignacion           : 5 36 36
 condicion            : 32 33 34 35 36
 condiciones          : 31
-expr                 : 12 13 23 31 31 36 36
+expr                 : 7 12 13 19 19 23 31 31
 lista_sentencia      : 32 33 33 34 35 36 41
 sentencia            : 2 3 41 42
 sentencia_mientras   : 38
@@ -101,7 +100,7 @@ sentencia_para       : 39
 sentencia_si         : 37
 statement            : 1 4 40
 statements           : 1 2 0
-tipodato             : 7
+tipodato             : 
 
 Parsing method: LALR
 
@@ -117,23 +116,24 @@ state 0
     (39) sentencia -> . sentencia_para
     (40) sentencia -> . statement
     (5) statement -> . asignacion
+    (6) statement -> . COMENTARIOS
     (12) statement -> . LEER DOSPUNTOS expr
     (13) statement -> . IMPRIMIR DOSPUNTOS expr
     (32) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
     (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK
-    (6) asignacion -> . ID ASIGNAR ID PUNTOYCOMA
-    (7) asignacion -> . ID ASIGNAR tipodato PUNTOYCOMA
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (7) asignacion -> . ID ASIGNAR expr PUNTOYCOMA
 
-    LEER            shift and go to state 8
-    IMPRIMIR        shift and go to state 9
-    SI              shift and go to state 10
-    MIENTRAS        shift and go to state 11
-    HAZ             shift and go to state 12
-    PARA            shift and go to state 13
-    ID              shift and go to state 14
+    COMENTARIOS     shift and go to state 8
+    LEER            shift and go to state 9
+    IMPRIMIR        shift and go to state 10
+    SI              shift and go to state 11
+    MIENTRAS        shift and go to state 12
+    HAZ             shift and go to state 13
+    PARA            shift and go to state 14
+    ID              shift and go to state 15
 
     statements                     shift and go to state 1
     statement                      shift and go to state 2
@@ -149,30 +149,31 @@ state 1
     (1) statements -> statements . statement
     (2) statements -> statements . sentencia
     (5) statement -> . asignacion
+    (6) statement -> . COMENTARIOS
     (12) statement -> . LEER DOSPUNTOS expr
     (13) statement -> . IMPRIMIR DOSPUNTOS expr
     (37) sentencia -> . sentencia_si
     (38) sentencia -> . sentencia_mientras
     (39) sentencia -> . sentencia_para
     (40) sentencia -> . statement
-    (6) asignacion -> . ID ASIGNAR ID PUNTOYCOMA
-    (7) asignacion -> . ID ASIGNAR tipodato PUNTOYCOMA
+    (7) asignacion -> . ID ASIGNAR expr PUNTOYCOMA
     (32) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
     (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
 
-    LEER            shift and go to state 8
-    IMPRIMIR        shift and go to state 9
-    ID              shift and go to state 14
-    SI              shift and go to state 10
-    MIENTRAS        shift and go to state 11
-    HAZ             shift and go to state 12
-    PARA            shift and go to state 13
+    COMENTARIOS     shift and go to state 8
+    LEER            shift and go to state 9
+    IMPRIMIR        shift and go to state 10
+    ID              shift and go to state 15
+    SI              shift and go to state 11
+    MIENTRAS        shift and go to state 12
+    HAZ             shift and go to state 13
+    PARA            shift and go to state 14
 
-    statement                      shift and go to state 15
-    sentencia                      shift and go to state 16
+    statement                      shift and go to state 16
+    sentencia                      shift and go to state 17
     asignacion                     shift and go to state 7
     sentencia_si                   shift and go to state 4
     sentencia_mientras             shift and go to state 5
@@ -183,6 +184,7 @@ state 2
     (4) statements -> statement .
     (40) sentencia -> statement .
 
+  ! reduce/reduce conflict for COMENTARIOS resolved using rule 4 (statements -> statement .)
   ! reduce/reduce conflict for LEER resolved using rule 4 (statements -> statement .)
   ! reduce/reduce conflict for IMPRIMIR resolved using rule 4 (statements -> statement .)
   ! reduce/reduce conflict for ID resolved using rule 4 (statements -> statement .)
@@ -191,6 +193,7 @@ state 2
   ! reduce/reduce conflict for HAZ resolved using rule 4 (statements -> statement .)
   ! reduce/reduce conflict for PARA resolved using rule 4 (statements -> statement .)
   ! reduce/reduce conflict for $end resolved using rule 4 (statements -> statement .)
+    COMENTARIOS     reduce using rule 4 (statements -> statement .)
     LEER            reduce using rule 4 (statements -> statement .)
     IMPRIMIR        reduce using rule 4 (statements -> statement .)
     ID              reduce using rule 4 (statements -> statement .)
@@ -200,6 +203,7 @@ state 2
     PARA            reduce using rule 4 (statements -> statement .)
     $end            reduce using rule 4 (statements -> statement .)
 
+  ! COMENTARIOS     [ reduce using rule 40 (sentencia -> statement .) ]
   ! LEER            [ reduce using rule 40 (sentencia -> statement .) ]
   ! IMPRIMIR        [ reduce using rule 40 (sentencia -> statement .) ]
   ! ID              [ reduce using rule 40 (sentencia -> statement .) ]
@@ -214,6 +218,7 @@ state 3
 
     (3) statements -> sentencia .
 
+    COMENTARIOS     reduce using rule 3 (statements -> sentencia .)
     LEER            reduce using rule 3 (statements -> sentencia .)
     IMPRIMIR        reduce using rule 3 (statements -> sentencia .)
     ID              reduce using rule 3 (statements -> sentencia .)
@@ -228,6 +233,7 @@ state 4
 
     (37) sentencia -> sentencia_si .
 
+    COMENTARIOS     reduce using rule 37 (sentencia -> sentencia_si .)
     LEER            reduce using rule 37 (sentencia -> sentencia_si .)
     IMPRIMIR        reduce using rule 37 (sentencia -> sentencia_si .)
     ID              reduce using rule 37 (sentencia -> sentencia_si .)
@@ -243,6 +249,7 @@ state 5
 
     (38) sentencia -> sentencia_mientras .
 
+    COMENTARIOS     reduce using rule 38 (sentencia -> sentencia_mientras .)
     LEER            reduce using rule 38 (sentencia -> sentencia_mientras .)
     IMPRIMIR        reduce using rule 38 (sentencia -> sentencia_mientras .)
     ID              reduce using rule 38 (sentencia -> sentencia_mientras .)
@@ -258,6 +265,7 @@ state 6
 
     (39) sentencia -> sentencia_para .
 
+    COMENTARIOS     reduce using rule 39 (sentencia -> sentencia_para .)
     LEER            reduce using rule 39 (sentencia -> sentencia_para .)
     IMPRIMIR        reduce using rule 39 (sentencia -> sentencia_para .)
     ID              reduce using rule 39 (sentencia -> sentencia_para .)
@@ -273,6 +281,7 @@ state 7
 
     (5) statement -> asignacion .
 
+    COMENTARIOS     reduce using rule 5 (statement -> asignacion .)
     LEER            reduce using rule 5 (statement -> asignacion .)
     IMPRIMIR        reduce using rule 5 (statement -> asignacion .)
     ID              reduce using rule 5 (statement -> asignacion .)
@@ -286,60 +295,76 @@ state 7
 
 state 8
 
-    (12) statement -> LEER . DOSPUNTOS expr
+    (6) statement -> COMENTARIOS .
 
-    DOSPUNTOS       shift and go to state 17
+    COMENTARIOS     reduce using rule 6 (statement -> COMENTARIOS .)
+    LEER            reduce using rule 6 (statement -> COMENTARIOS .)
+    IMPRIMIR        reduce using rule 6 (statement -> COMENTARIOS .)
+    ID              reduce using rule 6 (statement -> COMENTARIOS .)
+    SI              reduce using rule 6 (statement -> COMENTARIOS .)
+    MIENTRAS        reduce using rule 6 (statement -> COMENTARIOS .)
+    HAZ             reduce using rule 6 (statement -> COMENTARIOS .)
+    PARA            reduce using rule 6 (statement -> COMENTARIOS .)
+    $end            reduce using rule 6 (statement -> COMENTARIOS .)
+    RBLOCK          reduce using rule 6 (statement -> COMENTARIOS .)
 
 
 state 9
 
-    (13) statement -> IMPRIMIR . DOSPUNTOS expr
+    (12) statement -> LEER . DOSPUNTOS expr
 
     DOSPUNTOS       shift and go to state 18
 
 
 state 10
 
-    (32) sentencia_si -> SI . LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
-    (33) sentencia_si -> SI . LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
+    (13) statement -> IMPRIMIR . DOSPUNTOS expr
 
-    LPAREN          shift and go to state 19
+    DOSPUNTOS       shift and go to state 19
 
 
 state 11
 
-    (34) sentencia_mientras -> MIENTRAS . LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
+    (32) sentencia_si -> SI . LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
+    (33) sentencia_si -> SI . LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
 
     LPAREN          shift and go to state 20
 
 
 state 12
 
-    (35) sentencia_mientras -> HAZ . LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
+    (34) sentencia_mientras -> MIENTRAS . LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
 
-    LBLOCK          shift and go to state 21
+    LPAREN          shift and go to state 21
 
 
 state 13
 
-    (36) sentencia_para -> PARA . LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK
+    (35) sentencia_mientras -> HAZ . LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
 
-    LPAREN          shift and go to state 22
+    LBLOCK          shift and go to state 22
 
 
 state 14
 
-    (6) asignacion -> ID . ASIGNAR ID PUNTOYCOMA
-    (7) asignacion -> ID . ASIGNAR tipodato PUNTOYCOMA
+    (36) sentencia_para -> PARA . LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
 
-    ASIGNAR         shift and go to state 23
+    LPAREN          shift and go to state 23
 
 
 state 15
 
+    (7) asignacion -> ID . ASIGNAR expr PUNTOYCOMA
+
+    ASIGNAR         shift and go to state 24
+
+
+state 16
+
     (1) statements -> statements statement .
     (40) sentencia -> statement .
 
+  ! reduce/reduce conflict for COMENTARIOS resolved using rule 1 (statements -> statements statement .)
   ! reduce/reduce conflict for LEER resolved using rule 1 (statements -> statements statement .)
   ! reduce/reduce conflict for IMPRIMIR resolved using rule 1 (statements -> statements statement .)
   ! reduce/reduce conflict for ID resolved using rule 1 (statements -> statements statement .)
@@ -348,6 +373,7 @@ state 15
   ! reduce/reduce conflict for HAZ resolved using rule 1 (statements -> statements statement .)
   ! reduce/reduce conflict for PARA resolved using rule 1 (statements -> statements statement .)
   ! reduce/reduce conflict for $end resolved using rule 1 (statements -> statements statement .)
+    COMENTARIOS     reduce using rule 1 (statements -> statements statement .)
     LEER            reduce using rule 1 (statements -> statements statement .)
     IMPRIMIR        reduce using rule 1 (statements -> statements statement .)
     ID              reduce using rule 1 (statements -> statements statement .)
@@ -357,6 +383,7 @@ state 15
     PARA            reduce using rule 1 (statements -> statements statement .)
     $end            reduce using rule 1 (statements -> statements statement .)
 
+  ! COMENTARIOS     [ reduce using rule 40 (sentencia -> statement .) ]
   ! LEER            [ reduce using rule 40 (sentencia -> statement .) ]
   ! IMPRIMIR        [ reduce using rule 40 (sentencia -> statement .) ]
   ! ID              [ reduce using rule 40 (sentencia -> statement .) ]
@@ -367,10 +394,11 @@ state 15
   ! $end            [ reduce using rule 40 (sentencia -> statement .) ]
 
 
-state 16
+state 17
 
     (2) statements -> statements sentencia .
 
+    COMENTARIOS     reduce using rule 2 (statements -> statements sentencia .)
     LEER            reduce using rule 2 (statements -> statements sentencia .)
     IMPRIMIR        reduce using rule 2 (statements -> statements sentencia .)
     ID              reduce using rule 2 (statements -> statements sentencia .)
@@ -381,7 +409,7 @@ state 16
     $end            reduce using rule 2 (statements -> statements sentencia .)
 
 
-state 17
+state 18
 
     (12) statement -> LEER DOSPUNTOS . expr
     (14) expr -> . ID
@@ -389,22 +417,22 @@ state 17
     (16) expr -> . CADENA
     (17) expr -> . CARACTER
     (18) expr -> . ESTADO
-    (19) expr -> . NUMERICO MAS NUMERICO
+    (19) expr -> . expr MAS expr
     (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
     (21) expr -> . NUMERICO DIVIDIR NUMERICO
     (22) expr -> . NUMERICO MENOS NUMERICO
     (23) expr -> . LPAREN expr RPAREN
 
-    ID              shift and go to state 25
-    NUMERICO        shift and go to state 26
-    CADENA          shift and go to state 27
-    CARACTER        shift and go to state 28
-    ESTADO          shift and go to state 29
-    LPAREN          shift and go to state 30
+    ID              shift and go to state 26
+    NUMERICO        shift and go to state 27
+    CADENA          shift and go to state 28
+    CARACTER        shift and go to state 29
+    ESTADO          shift and go to state 30
+    LPAREN          shift and go to state 31
 
-    expr                           shift and go to state 24
+    expr                           shift and go to state 25
 
-state 18
+state 19
 
     (13) statement -> IMPRIMIR DOSPUNTOS . expr
     (14) expr -> . ID
@@ -412,22 +440,22 @@ state 18
     (16) expr -> . CADENA
     (17) expr -> . CARACTER
     (18) expr -> . ESTADO
-    (19) expr -> . NUMERICO MAS NUMERICO
+    (19) expr -> . expr MAS expr
     (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
     (21) expr -> . NUMERICO DIVIDIR NUMERICO
     (22) expr -> . NUMERICO MENOS NUMERICO
     (23) expr -> . LPAREN expr RPAREN
 
-    ID              shift and go to state 25
-    NUMERICO        shift and go to state 26
-    CADENA          shift and go to state 27
-    CARACTER        shift and go to state 28
-    ESTADO          shift and go to state 29
-    LPAREN          shift and go to state 30
+    ID              shift and go to state 26
+    NUMERICO        shift and go to state 27
+    CADENA          shift and go to state 28
+    CARACTER        shift and go to state 29
+    ESTADO          shift and go to state 30
+    LPAREN          shift and go to state 31
 
-    expr                           shift and go to state 31
+    expr                           shift and go to state 32
 
-state 19
+state 20
 
     (32) sentencia_si -> SI LPAREN . condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (33) sentencia_si -> SI LPAREN . condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
@@ -437,23 +465,23 @@ state 19
     (16) expr -> . CADENA
     (17) expr -> . CARACTER
     (18) expr -> . ESTADO
-    (19) expr -> . NUMERICO MAS NUMERICO
+    (19) expr -> . expr MAS expr
     (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
     (21) expr -> . NUMERICO DIVIDIR NUMERICO
     (22) expr -> . NUMERICO MENOS NUMERICO
     (23) expr -> . LPAREN expr RPAREN
 
-    ID              shift and go to state 25
-    NUMERICO        shift and go to state 26
-    CADENA          shift and go to state 27
-    CARACTER        shift and go to state 28
-    ESTADO          shift and go to state 29
-    LPAREN          shift and go to state 30
+    ID              shift and go to state 26
+    NUMERICO        shift and go to state 27
+    CADENA          shift and go to state 28
+    CARACTER        shift and go to state 29
+    ESTADO          shift and go to state 30
+    LPAREN          shift and go to state 31
 
-    condicion                      shift and go to state 32
-    expr                           shift and go to state 33
+    condicion                      shift and go to state 33
+    expr                           shift and go to state 34
 
-state 20
+state 21
 
     (34) sentencia_mientras -> MIENTRAS LPAREN . condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (31) condicion -> . expr condiciones expr
@@ -462,23 +490,23 @@ state 20
     (16) expr -> . CADENA
     (17) expr -> . CARACTER
     (18) expr -> . ESTADO
-    (19) expr -> . NUMERICO MAS NUMERICO
+    (19) expr -> . expr MAS expr
     (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
     (21) expr -> . NUMERICO DIVIDIR NUMERICO
     (22) expr -> . NUMERICO MENOS NUMERICO
     (23) expr -> . LPAREN expr RPAREN
 
-    ID              shift and go to state 25
-    NUMERICO        shift and go to state 26
-    CADENA          shift and go to state 27
-    CARACTER        shift and go to state 28
-    ESTADO          shift and go to state 29
-    LPAREN          shift and go to state 30
+    ID              shift and go to state 26
+    NUMERICO        shift and go to state 27
+    CADENA          shift and go to state 28
+    CARACTER        shift and go to state 29
+    ESTADO          shift and go to state 30
+    LPAREN          shift and go to state 31
 
-    condicion                      shift and go to state 34
-    expr                           shift and go to state 33
+    condicion                      shift and go to state 35
+    expr                           shift and go to state 34
 
-state 21
+state 22
 
     (35) sentencia_mientras -> HAZ LBLOCK . lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
     (41) lista_sentencia -> . lista_sentencia sentencia
@@ -491,73 +519,68 @@ state 21
     (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
     (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
     (5) statement -> . asignacion
+    (6) statement -> . COMENTARIOS
     (12) statement -> . LEER DOSPUNTOS expr
     (13) statement -> . IMPRIMIR DOSPUNTOS expr
-    (6) asignacion -> . ID ASIGNAR ID PUNTOYCOMA
-    (7) asignacion -> . ID ASIGNAR tipodato PUNTOYCOMA
+    (7) asignacion -> . ID ASIGNAR expr PUNTOYCOMA
 
-    SI              shift and go to state 10
-    MIENTRAS        shift and go to state 11
-    HAZ             shift and go to state 12
-    PARA            shift and go to state 13
-    LEER            shift and go to state 8
-    IMPRIMIR        shift and go to state 9
-    ID              shift and go to state 14
+    SI              shift and go to state 11
+    MIENTRAS        shift and go to state 12
+    HAZ             shift and go to state 13
+    PARA            shift and go to state 14
+    COMENTARIOS     shift and go to state 8
+    LEER            shift and go to state 9
+    IMPRIMIR        shift and go to state 10
+    ID              shift and go to state 15
 
-    lista_sentencia                shift and go to state 35
-    sentencia                      shift and go to state 36
+    lista_sentencia                shift and go to state 36
+    sentencia                      shift and go to state 37
     sentencia_si                   shift and go to state 4
     sentencia_mientras             shift and go to state 5
     sentencia_para                 shift and go to state 6
-    statement                      shift and go to state 37
+    statement                      shift and go to state 38
     asignacion                     shift and go to state 7
 
-state 22
+state 23
 
-    (36) sentencia_para -> PARA LPAREN . expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> PARA LPAREN . asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (7) asignacion -> . ID ASIGNAR expr PUNTOYCOMA
+
+    ID              shift and go to state 15
+
+    asignacion                     shift and go to state 39
+
+state 24
+
+    (7) asignacion -> ID ASIGNAR . expr PUNTOYCOMA
     (14) expr -> . ID
     (15) expr -> . NUMERICO
     (16) expr -> . CADENA
     (17) expr -> . CARACTER
     (18) expr -> . ESTADO
-    (19) expr -> . NUMERICO MAS NUMERICO
+    (19) expr -> . expr MAS expr
     (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
     (21) expr -> . NUMERICO DIVIDIR NUMERICO
     (22) expr -> . NUMERICO MENOS NUMERICO
     (23) expr -> . LPAREN expr RPAREN
 
-    ID              shift and go to state 25
-    NUMERICO        shift and go to state 26
-    CADENA          shift and go to state 27
-    CARACTER        shift and go to state 28
-    ESTADO          shift and go to state 29
-    LPAREN          shift and go to state 30
+    ID              shift and go to state 26
+    NUMERICO        shift and go to state 27
+    CADENA          shift and go to state 28
+    CARACTER        shift and go to state 29
+    ESTADO          shift and go to state 30
+    LPAREN          shift and go to state 31
 
-    expr                           shift and go to state 38
+    expr                           shift and go to state 40
 
-state 23
-
-    (6) asignacion -> ID ASIGNAR . ID PUNTOYCOMA
-    (7) asignacion -> ID ASIGNAR . tipodato PUNTOYCOMA
-    (8) tipodato -> . NUMERICO
-    (9) tipodato -> . CARACTER
-    (10) tipodato -> . ESTADO
-    (11) tipodato -> . CADENA
-
-    ID              shift and go to state 39
-    NUMERICO        shift and go to state 41
-    CARACTER        shift and go to state 42
-    ESTADO          shift and go to state 43
-    CADENA          shift and go to state 44
-
-    tipodato                       shift and go to state 40
-
-state 24
+state 25
 
     (12) statement -> LEER DOSPUNTOS expr .
+    (19) expr -> expr . MAS expr
 
+    COMENTARIOS     reduce using rule 12 (statement -> LEER DOSPUNTOS expr .)
     LEER            reduce using rule 12 (statement -> LEER DOSPUNTOS expr .)
     IMPRIMIR        reduce using rule 12 (statement -> LEER DOSPUNTOS expr .)
     ID              reduce using rule 12 (statement -> LEER DOSPUNTOS expr .)
@@ -567,12 +590,15 @@ state 24
     PARA            reduce using rule 12 (statement -> LEER DOSPUNTOS expr .)
     $end            reduce using rule 12 (statement -> LEER DOSPUNTOS expr .)
     RBLOCK          reduce using rule 12 (statement -> LEER DOSPUNTOS expr .)
+    MAS             shift and go to state 41
 
 
-state 25
+state 26
 
     (14) expr -> ID .
 
+    MAS             reduce using rule 14 (expr -> ID .)
+    COMENTARIOS     reduce using rule 14 (expr -> ID .)
     LEER            reduce using rule 14 (expr -> ID .)
     IMPRIMIR        reduce using rule 14 (expr -> ID .)
     ID              reduce using rule 14 (expr -> ID .)
@@ -593,14 +619,15 @@ state 25
     RPAREN          reduce using rule 14 (expr -> ID .)
 
 
-state 26
+state 27
 
     (15) expr -> NUMERICO .
-    (19) expr -> NUMERICO . MAS NUMERICO
     (20) expr -> NUMERICO . MULTIPLICAR NUMERICO
     (21) expr -> NUMERICO . DIVIDIR NUMERICO
     (22) expr -> NUMERICO . MENOS NUMERICO
 
+    MAS             reduce using rule 15 (expr -> NUMERICO .)
+    COMENTARIOS     reduce using rule 15 (expr -> NUMERICO .)
     LEER            reduce using rule 15 (expr -> NUMERICO .)
     IMPRIMIR        reduce using rule 15 (expr -> NUMERICO .)
     ID              reduce using rule 15 (expr -> NUMERICO .)
@@ -619,16 +646,17 @@ state 26
     DISTINTO        reduce using rule 15 (expr -> NUMERICO .)
     PUNTOYCOMA      reduce using rule 15 (expr -> NUMERICO .)
     RPAREN          reduce using rule 15 (expr -> NUMERICO .)
-    MAS             shift and go to state 45
-    MULTIPLICAR     shift and go to state 46
-    DIVIDIR         shift and go to state 47
-    MENOS           shift and go to state 48
+    MULTIPLICAR     shift and go to state 42
+    DIVIDIR         shift and go to state 43
+    MENOS           shift and go to state 44
 
 
-state 27
+state 28
 
     (16) expr -> CADENA .
 
+    MAS             reduce using rule 16 (expr -> CADENA .)
+    COMENTARIOS     reduce using rule 16 (expr -> CADENA .)
     LEER            reduce using rule 16 (expr -> CADENA .)
     IMPRIMIR        reduce using rule 16 (expr -> CADENA .)
     ID              reduce using rule 16 (expr -> CADENA .)
@@ -649,10 +677,12 @@ state 27
     RPAREN          reduce using rule 16 (expr -> CADENA .)
 
 
-state 28
+state 29
 
     (17) expr -> CARACTER .
 
+    MAS             reduce using rule 17 (expr -> CARACTER .)
+    COMENTARIOS     reduce using rule 17 (expr -> CARACTER .)
     LEER            reduce using rule 17 (expr -> CARACTER .)
     IMPRIMIR        reduce using rule 17 (expr -> CARACTER .)
     ID              reduce using rule 17 (expr -> CARACTER .)
@@ -673,10 +703,12 @@ state 28
     RPAREN          reduce using rule 17 (expr -> CARACTER .)
 
 
-state 29
+state 30
 
     (18) expr -> ESTADO .
 
+    MAS             reduce using rule 18 (expr -> ESTADO .)
+    COMENTARIOS     reduce using rule 18 (expr -> ESTADO .)
     LEER            reduce using rule 18 (expr -> ESTADO .)
     IMPRIMIR        reduce using rule 18 (expr -> ESTADO .)
     ID              reduce using rule 18 (expr -> ESTADO .)
@@ -697,7 +729,7 @@ state 29
     RPAREN          reduce using rule 18 (expr -> ESTADO .)
 
 
-state 30
+state 31
 
     (23) expr -> LPAREN . expr RPAREN
     (14) expr -> . ID
@@ -705,25 +737,27 @@ state 30
     (16) expr -> . CADENA
     (17) expr -> . CARACTER
     (18) expr -> . ESTADO
-    (19) expr -> . NUMERICO MAS NUMERICO
+    (19) expr -> . expr MAS expr
     (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
     (21) expr -> . NUMERICO DIVIDIR NUMERICO
     (22) expr -> . NUMERICO MENOS NUMERICO
     (23) expr -> . LPAREN expr RPAREN
 
-    ID              shift and go to state 25
-    NUMERICO        shift and go to state 26
-    CADENA          shift and go to state 27
-    CARACTER        shift and go to state 28
-    ESTADO          shift and go to state 29
-    LPAREN          shift and go to state 30
+    ID              shift and go to state 26
+    NUMERICO        shift and go to state 27
+    CADENA          shift and go to state 28
+    CARACTER        shift and go to state 29
+    ESTADO          shift and go to state 30
+    LPAREN          shift and go to state 31
 
-    expr                           shift and go to state 49
+    expr                           shift and go to state 45
 
-state 31
+state 32
 
     (13) statement -> IMPRIMIR DOSPUNTOS expr .
+    (19) expr -> expr . MAS expr
 
+    COMENTARIOS     reduce using rule 13 (statement -> IMPRIMIR DOSPUNTOS expr .)
     LEER            reduce using rule 13 (statement -> IMPRIMIR DOSPUNTOS expr .)
     IMPRIMIR        reduce using rule 13 (statement -> IMPRIMIR DOSPUNTOS expr .)
     ID              reduce using rule 13 (statement -> IMPRIMIR DOSPUNTOS expr .)
@@ -733,19 +767,21 @@ state 31
     PARA            reduce using rule 13 (statement -> IMPRIMIR DOSPUNTOS expr .)
     $end            reduce using rule 13 (statement -> IMPRIMIR DOSPUNTOS expr .)
     RBLOCK          reduce using rule 13 (statement -> IMPRIMIR DOSPUNTOS expr .)
-
-
-state 32
-
-    (32) sentencia_si -> SI LPAREN condicion . RPAREN LBLOCK lista_sentencia RBLOCK
-    (33) sentencia_si -> SI LPAREN condicion . RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
-
-    RPAREN          shift and go to state 50
+    MAS             shift and go to state 41
 
 
 state 33
 
+    (32) sentencia_si -> SI LPAREN condicion . RPAREN LBLOCK lista_sentencia RBLOCK
+    (33) sentencia_si -> SI LPAREN condicion . RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
+
+    RPAREN          shift and go to state 46
+
+
+state 34
+
     (31) condicion -> expr . condiciones expr
+    (19) expr -> expr . MAS expr
     (24) condiciones -> . MENOR
     (25) condiciones -> . MENORIGUAL
     (26) condiciones -> . MAYOR
@@ -754,24 +790,25 @@ state 33
     (29) condiciones -> . IGUALDAD
     (30) condiciones -> . DISTINTO
 
-    MENOR           shift and go to state 52
-    MENORIGUAL      shift and go to state 53
-    MAYOR           shift and go to state 54
-    MAYORIGUAL      shift and go to state 55
-    ASIGNAR         shift and go to state 56
-    IGUALDAD        shift and go to state 57
-    DISTINTO        shift and go to state 58
+    MAS             shift and go to state 41
+    MENOR           shift and go to state 48
+    MENORIGUAL      shift and go to state 49
+    MAYOR           shift and go to state 50
+    MAYORIGUAL      shift and go to state 51
+    ASIGNAR         shift and go to state 52
+    IGUALDAD        shift and go to state 53
+    DISTINTO        shift and go to state 54
 
-    condiciones                    shift and go to state 51
+    condiciones                    shift and go to state 47
 
-state 34
+state 35
 
     (34) sentencia_mientras -> MIENTRAS LPAREN condicion . RPAREN LBLOCK lista_sentencia RBLOCK
 
-    RPAREN          shift and go to state 59
+    RPAREN          shift and go to state 55
 
 
-state 35
+state 36
 
     (35) sentencia_mientras -> HAZ LBLOCK lista_sentencia . RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
     (41) lista_sentencia -> lista_sentencia . sentencia
@@ -783,30 +820,31 @@ state 35
     (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
     (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
     (5) statement -> . asignacion
+    (6) statement -> . COMENTARIOS
     (12) statement -> . LEER DOSPUNTOS expr
     (13) statement -> . IMPRIMIR DOSPUNTOS expr
-    (6) asignacion -> . ID ASIGNAR ID PUNTOYCOMA
-    (7) asignacion -> . ID ASIGNAR tipodato PUNTOYCOMA
+    (7) asignacion -> . ID ASIGNAR expr PUNTOYCOMA
 
-    RBLOCK          shift and go to state 60
-    SI              shift and go to state 10
-    MIENTRAS        shift and go to state 11
-    HAZ             shift and go to state 12
-    PARA            shift and go to state 13
-    LEER            shift and go to state 8
-    IMPRIMIR        shift and go to state 9
-    ID              shift and go to state 14
+    RBLOCK          shift and go to state 56
+    SI              shift and go to state 11
+    MIENTRAS        shift and go to state 12
+    HAZ             shift and go to state 13
+    PARA            shift and go to state 14
+    COMENTARIOS     shift and go to state 8
+    LEER            shift and go to state 9
+    IMPRIMIR        shift and go to state 10
+    ID              shift and go to state 15
 
-    sentencia                      shift and go to state 61
+    sentencia                      shift and go to state 57
     sentencia_si                   shift and go to state 4
     sentencia_mientras             shift and go to state 5
     sentencia_para                 shift and go to state 6
-    statement                      shift and go to state 37
+    statement                      shift and go to state 38
     asignacion                     shift and go to state 7
 
-state 36
+state 37
 
     (42) lista_sentencia -> sentencia .
 
@@ -815,12 +853,13 @@ state 36
     MIENTRAS        reduce using rule 42 (lista_sentencia -> sentencia .)
     HAZ             reduce using rule 42 (lista_sentencia -> sentencia .)
     PARA            reduce using rule 42 (lista_sentencia -> sentencia .)
+    COMENTARIOS     reduce using rule 42 (lista_sentencia -> sentencia .)
     LEER            reduce using rule 42 (lista_sentencia -> sentencia .)
     IMPRIMIR        reduce using rule 42 (lista_sentencia -> sentencia .)
     ID              reduce using rule 42 (lista_sentencia -> sentencia .)
 
 
-state 37
+state 38
 
     (40) sentencia -> statement .
 
@@ -829,104 +868,108 @@ state 37
     MIENTRAS        reduce using rule 40 (sentencia -> statement .)
     HAZ             reduce using rule 40 (sentencia -> statement .)
     PARA            reduce using rule 40 (sentencia -> statement .)
+    COMENTARIOS     reduce using rule 40 (sentencia -> statement .)
     LEER            reduce using rule 40 (sentencia -> statement .)
     IMPRIMIR        reduce using rule 40 (sentencia -> statement .)
     ID              reduce using rule 40 (sentencia -> statement .)
 
 
-state 38
-
-    (36) sentencia_para -> PARA LPAREN expr . PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK
-
-    PUNTOYCOMA      shift and go to state 62
-
-
 state 39
 
-    (6) asignacion -> ID ASIGNAR ID . PUNTOYCOMA
+    (36) sentencia_para -> PARA LPAREN asignacion . condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (31) condicion -> . expr condiciones expr
+    (14) expr -> . ID
+    (15) expr -> . NUMERICO
+    (16) expr -> . CADENA
+    (17) expr -> . CARACTER
+    (18) expr -> . ESTADO
+    (19) expr -> . expr MAS expr
+    (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
+    (21) expr -> . NUMERICO DIVIDIR NUMERICO
+    (22) expr -> . NUMERICO MENOS NUMERICO
+    (23) expr -> . LPAREN expr RPAREN
 
-    PUNTOYCOMA      shift and go to state 63
+    ID              shift and go to state 26
+    NUMERICO        shift and go to state 27
+    CADENA          shift and go to state 28
+    CARACTER        shift and go to state 29
+    ESTADO          shift and go to state 30
+    LPAREN          shift and go to state 31
 
+    condicion                      shift and go to state 58
+    expr                           shift and go to state 34
 
 state 40
 
-    (7) asignacion -> ID ASIGNAR tipodato . PUNTOYCOMA
+    (7) asignacion -> ID ASIGNAR expr . PUNTOYCOMA
+    (19) expr -> expr . MAS expr
 
-    PUNTOYCOMA      shift and go to state 64
+    PUNTOYCOMA      shift and go to state 59
+    MAS             shift and go to state 41
 
 
 state 41
 
-    (8) tipodato -> NUMERICO .
+    (19) expr -> expr MAS . expr
+    (14) expr -> . ID
+    (15) expr -> . NUMERICO
+    (16) expr -> . CADENA
+    (17) expr -> . CARACTER
+    (18) expr -> . ESTADO
+    (19) expr -> . expr MAS expr
+    (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
+    (21) expr -> . NUMERICO DIVIDIR NUMERICO
+    (22) expr -> . NUMERICO MENOS NUMERICO
+    (23) expr -> . LPAREN expr RPAREN
 
-    PUNTOYCOMA      reduce using rule 8 (tipodato -> NUMERICO .)
+    ID              shift and go to state 26
+    NUMERICO        shift and go to state 27
+    CADENA          shift and go to state 28
+    CARACTER        shift and go to state 29
+    ESTADO          shift and go to state 30
+    LPAREN          shift and go to state 31
 
+    expr                           shift and go to state 60
 
 state 42
 
-    (9) tipodato -> CARACTER .
+    (20) expr -> NUMERICO MULTIPLICAR . NUMERICO
 
-    PUNTOYCOMA      reduce using rule 9 (tipodato -> CARACTER .)
+    NUMERICO        shift and go to state 61
 
 
 state 43
 
-    (10) tipodato -> ESTADO .
+    (21) expr -> NUMERICO DIVIDIR . NUMERICO
 
-    PUNTOYCOMA      reduce using rule 10 (tipodato -> ESTADO .)
+    NUMERICO        shift and go to state 62
 
 
 state 44
 
-    (11) tipodato -> CADENA .
+    (22) expr -> NUMERICO MENOS . NUMERICO
 
-    PUNTOYCOMA      reduce using rule 11 (tipodato -> CADENA .)
+    NUMERICO        shift and go to state 63
 
 
 state 45
 
-    (19) expr -> NUMERICO MAS . NUMERICO
+    (23) expr -> LPAREN expr . RPAREN
+    (19) expr -> expr . MAS expr
 
-    NUMERICO        shift and go to state 65
+    RPAREN          shift and go to state 64
+    MAS             shift and go to state 41
 
 
 state 46
 
-    (20) expr -> NUMERICO MULTIPLICAR . NUMERICO
-
-    NUMERICO        shift and go to state 66
-
-
-state 47
-
-    (21) expr -> NUMERICO DIVIDIR . NUMERICO
-
-    NUMERICO        shift and go to state 67
-
-
-state 48
-
-    (22) expr -> NUMERICO MENOS . NUMERICO
-
-    NUMERICO        shift and go to state 68
-
-
-state 49
-
-    (23) expr -> LPAREN expr . RPAREN
-
-    RPAREN          shift and go to state 69
-
-
-state 50
-
     (32) sentencia_si -> SI LPAREN condicion RPAREN . LBLOCK lista_sentencia RBLOCK
     (33) sentencia_si -> SI LPAREN condicion RPAREN . LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
 
-    LBLOCK          shift and go to state 70
+    LBLOCK          shift and go to state 65
 
 
-state 51
+state 47
 
     (31) condicion -> expr condiciones . expr
     (14) expr -> . ID
@@ -934,22 +977,22 @@ state 51
     (16) expr -> . CADENA
     (17) expr -> . CARACTER
     (18) expr -> . ESTADO
-    (19) expr -> . NUMERICO MAS NUMERICO
+    (19) expr -> . expr MAS expr
     (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
     (21) expr -> . NUMERICO DIVIDIR NUMERICO
     (22) expr -> . NUMERICO MENOS NUMERICO
     (23) expr -> . LPAREN expr RPAREN
 
-    ID              shift and go to state 25
-    NUMERICO        shift and go to state 26
-    CADENA          shift and go to state 27
-    CARACTER        shift and go to state 28
-    ESTADO          shift and go to state 29
-    LPAREN          shift and go to state 30
+    ID              shift and go to state 26
+    NUMERICO        shift and go to state 27
+    CADENA          shift and go to state 28
+    CARACTER        shift and go to state 29
+    ESTADO          shift and go to state 30
+    LPAREN          shift and go to state 31
 
-    expr                           shift and go to state 71
+    expr                           shift and go to state 66
 
-state 52
+state 48
 
     (24) condiciones -> MENOR .
 
@@ -961,7 +1004,7 @@ state 52
     LPAREN          reduce using rule 24 (condiciones -> MENOR .)
 
 
-state 53
+state 49
 
     (25) condiciones -> MENORIGUAL .
 
@@ -973,7 +1016,7 @@ state 53
     LPAREN          reduce using rule 25 (condiciones -> MENORIGUAL .)
 
 
-state 54
+state 50
 
     (26) condiciones -> MAYOR .
 
@@ -985,7 +1028,7 @@ state 54
     LPAREN          reduce using rule 26 (condiciones -> MAYOR .)
 
 
-state 55
+state 51
 
     (27) condiciones -> MAYORIGUAL .
 
@@ -997,7 +1040,7 @@ state 55
     LPAREN          reduce using rule 27 (condiciones -> MAYORIGUAL .)
 
 
-state 56
+state 52
 
     (28) condiciones -> ASIGNAR .
 
@@ -1009,7 +1052,7 @@ state 56
     LPAREN          reduce using rule 28 (condiciones -> ASIGNAR .)
 
 
-state 57
+state 53
 
     (29) condiciones -> IGUALDAD .
 
@@ -1021,7 +1064,7 @@ state 57
     LPAREN          reduce using rule 29 (condiciones -> IGUALDAD .)
 
 
-state 58
+state 54
 
     (30) condiciones -> DISTINTO .
 
@@ -1033,21 +1076,21 @@ state 58
     LPAREN          reduce using rule 30 (condiciones -> DISTINTO .)
 
 
-state 59
+state 55
 
     (34) sentencia_mientras -> MIENTRAS LPAREN condicion RPAREN . LBLOCK lista_sentencia RBLOCK
 
-    LBLOCK          shift and go to state 72
+    LBLOCK          shift and go to state 67
 
 
-state 60
+state 56
 
     (35) sentencia_mientras -> HAZ LBLOCK lista_sentencia RBLOCK . MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
 
-    MIENTRAS        shift and go to state 73
+    MIENTRAS        shift and go to state 68
 
 
-state 61
+state 57
 
     (41) lista_sentencia -> lista_sentencia sentencia .
 
@@ -1056,94 +1099,77 @@ state 61
     MIENTRAS        reduce using rule 41 (lista_sentencia -> lista_sentencia sentencia .)
     HAZ             reduce using rule 41 (lista_sentencia -> lista_sentencia sentencia .)
     PARA            reduce using rule 41 (lista_sentencia -> lista_sentencia sentencia .)
+    COMENTARIOS     reduce using rule 41 (lista_sentencia -> lista_sentencia sentencia .)
     LEER            reduce using rule 41 (lista_sentencia -> lista_sentencia sentencia .)
     IMPRIMIR        reduce using rule 41 (lista_sentencia -> lista_sentencia sentencia .)
     ID              reduce using rule 41 (lista_sentencia -> lista_sentencia sentencia .)
 
 
-state 62
+state 58
 
-    (36) sentencia_para -> PARA LPAREN expr PUNTOYCOMA . condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK
-    (31) condicion -> . expr condiciones expr
-    (14) expr -> . ID
-    (15) expr -> . NUMERICO
-    (16) expr -> . CADENA
-    (17) expr -> . CARACTER
-    (18) expr -> . ESTADO
-    (19) expr -> . NUMERICO MAS NUMERICO
-    (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
-    (21) expr -> . NUMERICO DIVIDIR NUMERICO
-    (22) expr -> . NUMERICO MENOS NUMERICO
-    (23) expr -> . LPAREN expr RPAREN
+    (36) sentencia_para -> PARA LPAREN asignacion condicion . PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
 
-    ID              shift and go to state 25
-    NUMERICO        shift and go to state 26
-    CADENA          shift and go to state 27
-    CARACTER        shift and go to state 28
-    ESTADO          shift and go to state 29
-    LPAREN          shift and go to state 30
-
-    expr                           shift and go to state 33
-    condicion                      shift and go to state 74
-
-state 63
-
-    (6) asignacion -> ID ASIGNAR ID PUNTOYCOMA .
-
-    LEER            reduce using rule 6 (asignacion -> ID ASIGNAR ID PUNTOYCOMA .)
-    IMPRIMIR        reduce using rule 6 (asignacion -> ID ASIGNAR ID PUNTOYCOMA .)
-    ID              reduce using rule 6 (asignacion -> ID ASIGNAR ID PUNTOYCOMA .)
-    SI              reduce using rule 6 (asignacion -> ID ASIGNAR ID PUNTOYCOMA .)
-    MIENTRAS        reduce using rule 6 (asignacion -> ID ASIGNAR ID PUNTOYCOMA .)
-    HAZ             reduce using rule 6 (asignacion -> ID ASIGNAR ID PUNTOYCOMA .)
-    PARA            reduce using rule 6 (asignacion -> ID ASIGNAR ID PUNTOYCOMA .)
-    $end            reduce using rule 6 (asignacion -> ID ASIGNAR ID PUNTOYCOMA .)
-    RBLOCK          reduce using rule 6 (asignacion -> ID ASIGNAR ID PUNTOYCOMA .)
+    PUNTOYCOMA      shift and go to state 69
 
 
-state 64
+state 59
 
-    (7) asignacion -> ID ASIGNAR tipodato PUNTOYCOMA .
+    (7) asignacion -> ID ASIGNAR expr PUNTOYCOMA .
 
-    LEER            reduce using rule 7 (asignacion -> ID ASIGNAR tipodato PUNTOYCOMA .)
-    IMPRIMIR        reduce using rule 7 (asignacion -> ID ASIGNAR tipodato PUNTOYCOMA .)
-    ID              reduce using rule 7 (asignacion -> ID ASIGNAR tipodato PUNTOYCOMA .)
-    SI              reduce using rule 7 (asignacion -> ID ASIGNAR tipodato PUNTOYCOMA .)
-    MIENTRAS        reduce using rule 7 (asignacion -> ID ASIGNAR tipodato PUNTOYCOMA .)
-    HAZ             reduce using rule 7 (asignacion -> ID ASIGNAR tipodato PUNTOYCOMA .)
-    PARA            reduce using rule 7 (asignacion -> ID ASIGNAR tipodato PUNTOYCOMA .)
-    $end            reduce using rule 7 (asignacion -> ID ASIGNAR tipodato PUNTOYCOMA .)
-    RBLOCK          reduce using rule 7 (asignacion -> ID ASIGNAR tipodato PUNTOYCOMA .)
-
-
-state 65
-
-    (19) expr -> NUMERICO MAS NUMERICO .
-
-    LEER            reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    IMPRIMIR        reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    ID              reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    SI              reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    MIENTRAS        reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    HAZ             reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    PARA            reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    $end            reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    RBLOCK          reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    MENOR           reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    MENORIGUAL      reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    MAYOR           reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    MAYORIGUAL      reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    ASIGNAR         reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    IGUALDAD        reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    DISTINTO        reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    PUNTOYCOMA      reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    RPAREN          reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
+    COMENTARIOS     reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
+    LEER            reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
+    IMPRIMIR        reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
+    ID              reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
+    SI              reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
+    MIENTRAS        reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
+    HAZ             reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
+    PARA            reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
+    $end            reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
+    RBLOCK          reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
+    NUMERICO        reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
+    CADENA          reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
+    CARACTER        reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
+    ESTADO          reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
+    LPAREN          reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
+    RPAREN          reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
 
 
-state 66
+state 60
+
+    (19) expr -> expr MAS expr .
+    (19) expr -> expr . MAS expr
+
+  ! shift/reduce conflict for MAS resolved as shift
+    COMENTARIOS     reduce using rule 19 (expr -> expr MAS expr .)
+    LEER            reduce using rule 19 (expr -> expr MAS expr .)
+    IMPRIMIR        reduce using rule 19 (expr -> expr MAS expr .)
+    ID              reduce using rule 19 (expr -> expr MAS expr .)
+    SI              reduce using rule 19 (expr -> expr MAS expr .)
+    MIENTRAS        reduce using rule 19 (expr -> expr MAS expr .)
+    HAZ             reduce using rule 19 (expr -> expr MAS expr .)
+    PARA            reduce using rule 19 (expr -> expr MAS expr .)
+    $end            reduce using rule 19 (expr -> expr MAS expr .)
+    RBLOCK          reduce using rule 19 (expr -> expr MAS expr .)
+    MENOR           reduce using rule 19 (expr -> expr MAS expr .)
+    MENORIGUAL      reduce using rule 19 (expr -> expr MAS expr .)
+    MAYOR           reduce using rule 19 (expr -> expr MAS expr .)
+    MAYORIGUAL      reduce using rule 19 (expr -> expr MAS expr .)
+    ASIGNAR         reduce using rule 19 (expr -> expr MAS expr .)
+    IGUALDAD        reduce using rule 19 (expr -> expr MAS expr .)
+    DISTINTO        reduce using rule 19 (expr -> expr MAS expr .)
+    PUNTOYCOMA      reduce using rule 19 (expr -> expr MAS expr .)
+    RPAREN          reduce using rule 19 (expr -> expr MAS expr .)
+    MAS             shift and go to state 41
+
+  ! MAS             [ reduce using rule 19 (expr -> expr MAS expr .) ]
+
+
+state 61
 
     (20) expr -> NUMERICO MULTIPLICAR NUMERICO .
 
+    MAS             reduce using rule 20 (expr -> NUMERICO MULTIPLICAR NUMERICO .)
+    COMENTARIOS     reduce using rule 20 (expr -> NUMERICO MULTIPLICAR NUMERICO .)
     LEER            reduce using rule 20 (expr -> NUMERICO MULTIPLICAR NUMERICO .)
     IMPRIMIR        reduce using rule 20 (expr -> NUMERICO MULTIPLICAR NUMERICO .)
     ID              reduce using rule 20 (expr -> NUMERICO MULTIPLICAR NUMERICO .)
@@ -1164,10 +1190,12 @@ state 66
     RPAREN          reduce using rule 20 (expr -> NUMERICO MULTIPLICAR NUMERICO .)
 
 
-state 67
+state 62
 
     (21) expr -> NUMERICO DIVIDIR NUMERICO .
 
+    MAS             reduce using rule 21 (expr -> NUMERICO DIVIDIR NUMERICO .)
+    COMENTARIOS     reduce using rule 21 (expr -> NUMERICO DIVIDIR NUMERICO .)
     LEER            reduce using rule 21 (expr -> NUMERICO DIVIDIR NUMERICO .)
     IMPRIMIR        reduce using rule 21 (expr -> NUMERICO DIVIDIR NUMERICO .)
     ID              reduce using rule 21 (expr -> NUMERICO DIVIDIR NUMERICO .)
@@ -1188,10 +1216,12 @@ state 67
     RPAREN          reduce using rule 21 (expr -> NUMERICO DIVIDIR NUMERICO .)
 
 
-state 68
+state 63
 
     (22) expr -> NUMERICO MENOS NUMERICO .
 
+    MAS             reduce using rule 22 (expr -> NUMERICO MENOS NUMERICO .)
+    COMENTARIOS     reduce using rule 22 (expr -> NUMERICO MENOS NUMERICO .)
     LEER            reduce using rule 22 (expr -> NUMERICO MENOS NUMERICO .)
     IMPRIMIR        reduce using rule 22 (expr -> NUMERICO MENOS NUMERICO .)
     ID              reduce using rule 22 (expr -> NUMERICO MENOS NUMERICO .)
@@ -1212,10 +1242,12 @@ state 68
     RPAREN          reduce using rule 22 (expr -> NUMERICO MENOS NUMERICO .)
 
 
-state 69
+state 64
 
     (23) expr -> LPAREN expr RPAREN .
 
+    MAS             reduce using rule 23 (expr -> LPAREN expr RPAREN .)
+    COMENTARIOS     reduce using rule 23 (expr -> LPAREN expr RPAREN .)
     LEER            reduce using rule 23 (expr -> LPAREN expr RPAREN .)
     IMPRIMIR        reduce using rule 23 (expr -> LPAREN expr RPAREN .)
     ID              reduce using rule 23 (expr -> LPAREN expr RPAREN .)
@@ -1236,7 +1268,7 @@ state 69
     RPAREN          reduce using rule 23 (expr -> LPAREN expr RPAREN .)
 
 
-state 70
+state 65
 
     (32) sentencia_si -> SI LPAREN condicion RPAREN LBLOCK . lista_sentencia RBLOCK
     (33) sentencia_si -> SI LPAREN condicion RPAREN LBLOCK . lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
@@ -1250,38 +1282,41 @@ state 70
     (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
     (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
     (5) statement -> . asignacion
+    (6) statement -> . COMENTARIOS
     (12) statement -> . LEER DOSPUNTOS expr
     (13) statement -> . IMPRIMIR DOSPUNTOS expr
-    (6) asignacion -> . ID ASIGNAR ID PUNTOYCOMA
-    (7) asignacion -> . ID ASIGNAR tipodato PUNTOYCOMA
+    (7) asignacion -> . ID ASIGNAR expr PUNTOYCOMA
 
-    SI              shift and go to state 10
-    MIENTRAS        shift and go to state 11
-    HAZ             shift and go to state 12
-    PARA            shift and go to state 13
-    LEER            shift and go to state 8
-    IMPRIMIR        shift and go to state 9
-    ID              shift and go to state 14
+    SI              shift and go to state 11
+    MIENTRAS        shift and go to state 12
+    HAZ             shift and go to state 13
+    PARA            shift and go to state 14
+    COMENTARIOS     shift and go to state 8
+    LEER            shift and go to state 9
+    IMPRIMIR        shift and go to state 10
+    ID              shift and go to state 15
 
-    lista_sentencia                shift and go to state 75
-    sentencia                      shift and go to state 36
+    lista_sentencia                shift and go to state 70
+    sentencia                      shift and go to state 37
     sentencia_si                   shift and go to state 4
     sentencia_mientras             shift and go to state 5
     sentencia_para                 shift and go to state 6
-    statement                      shift and go to state 37
+    statement                      shift and go to state 38
     asignacion                     shift and go to state 7
 
-state 71
+state 66
 
     (31) condicion -> expr condiciones expr .
+    (19) expr -> expr . MAS expr
 
     RPAREN          reduce using rule 31 (condicion -> expr condiciones expr .)
     PUNTOYCOMA      reduce using rule 31 (condicion -> expr condiciones expr .)
+    MAS             shift and go to state 41
 
 
-state 72
+state 67
 
     (34) sentencia_mientras -> MIENTRAS LPAREN condicion RPAREN LBLOCK . lista_sentencia RBLOCK
     (41) lista_sentencia -> . lista_sentencia sentencia
@@ -1294,44 +1329,47 @@ state 72
     (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
     (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
     (5) statement -> . asignacion
+    (6) statement -> . COMENTARIOS
     (12) statement -> . LEER DOSPUNTOS expr
     (13) statement -> . IMPRIMIR DOSPUNTOS expr
-    (6) asignacion -> . ID ASIGNAR ID PUNTOYCOMA
-    (7) asignacion -> . ID ASIGNAR tipodato PUNTOYCOMA
+    (7) asignacion -> . ID ASIGNAR expr PUNTOYCOMA
 
-    SI              shift and go to state 10
-    MIENTRAS        shift and go to state 11
-    HAZ             shift and go to state 12
-    PARA            shift and go to state 13
-    LEER            shift and go to state 8
-    IMPRIMIR        shift and go to state 9
-    ID              shift and go to state 14
+    SI              shift and go to state 11
+    MIENTRAS        shift and go to state 12
+    HAZ             shift and go to state 13
+    PARA            shift and go to state 14
+    COMENTARIOS     shift and go to state 8
+    LEER            shift and go to state 9
+    IMPRIMIR        shift and go to state 10
+    ID              shift and go to state 15
 
-    lista_sentencia                shift and go to state 76
-    sentencia                      shift and go to state 36
+    lista_sentencia                shift and go to state 71
+    sentencia                      shift and go to state 37
     sentencia_si                   shift and go to state 4
     sentencia_mientras             shift and go to state 5
     sentencia_para                 shift and go to state 6
-    statement                      shift and go to state 37
+    statement                      shift and go to state 38
     asignacion                     shift and go to state 7
 
-state 73
+state 68
 
     (35) sentencia_mientras -> HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS . LPAREN condicion RPAREN PUNTOYCOMA
 
-    LPAREN          shift and go to state 77
+    LPAREN          shift and go to state 72
 
 
-state 74
+state 69
 
-    (36) sentencia_para -> PARA LPAREN expr PUNTOYCOMA condicion . PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA . asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (7) asignacion -> . ID ASIGNAR expr PUNTOYCOMA
 
-    PUNTOYCOMA      shift and go to state 78
+    ID              shift and go to state 15
 
+    asignacion                     shift and go to state 73
 
-state 75
+state 70
 
     (32) sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia . RBLOCK
     (33) sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia . RBLOCK NO LBLOCK lista_sentencia RBLOCK
@@ -1344,30 +1382,31 @@ state 75
     (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
     (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
     (5) statement -> . asignacion
+    (6) statement -> . COMENTARIOS
     (12) statement -> . LEER DOSPUNTOS expr
     (13) statement -> . IMPRIMIR DOSPUNTOS expr
-    (6) asignacion -> . ID ASIGNAR ID PUNTOYCOMA
-    (7) asignacion -> . ID ASIGNAR tipodato PUNTOYCOMA
+    (7) asignacion -> . ID ASIGNAR expr PUNTOYCOMA
 
-    RBLOCK          shift and go to state 79
-    SI              shift and go to state 10
-    MIENTRAS        shift and go to state 11
-    HAZ             shift and go to state 12
-    PARA            shift and go to state 13
-    LEER            shift and go to state 8
-    IMPRIMIR        shift and go to state 9
-    ID              shift and go to state 14
+    RBLOCK          shift and go to state 74
+    SI              shift and go to state 11
+    MIENTRAS        shift and go to state 12
+    HAZ             shift and go to state 13
+    PARA            shift and go to state 14
+    COMENTARIOS     shift and go to state 8
+    LEER            shift and go to state 9
+    IMPRIMIR        shift and go to state 10
+    ID              shift and go to state 15
 
-    sentencia                      shift and go to state 61
+    sentencia                      shift and go to state 57
     sentencia_si                   shift and go to state 4
     sentencia_mientras             shift and go to state 5
     sentencia_para                 shift and go to state 6
-    statement                      shift and go to state 37
+    statement                      shift and go to state 38
     asignacion                     shift and go to state 7
 
-state 76
+state 71
 
     (34) sentencia_mientras -> MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia . RBLOCK
     (41) lista_sentencia -> lista_sentencia . sentencia
@@ -1379,30 +1418,31 @@ state 76
     (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
     (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
     (5) statement -> . asignacion
+    (6) statement -> . COMENTARIOS
     (12) statement -> . LEER DOSPUNTOS expr
     (13) statement -> . IMPRIMIR DOSPUNTOS expr
-    (6) asignacion -> . ID ASIGNAR ID PUNTOYCOMA
-    (7) asignacion -> . ID ASIGNAR tipodato PUNTOYCOMA
+    (7) asignacion -> . ID ASIGNAR expr PUNTOYCOMA
 
-    RBLOCK          shift and go to state 80
-    SI              shift and go to state 10
-    MIENTRAS        shift and go to state 11
-    HAZ             shift and go to state 12
-    PARA            shift and go to state 13
-    LEER            shift and go to state 8
-    IMPRIMIR        shift and go to state 9
-    ID              shift and go to state 14
+    RBLOCK          shift and go to state 75
+    SI              shift and go to state 11
+    MIENTRAS        shift and go to state 12
+    HAZ             shift and go to state 13
+    PARA            shift and go to state 14
+    COMENTARIOS     shift and go to state 8
+    LEER            shift and go to state 9
+    IMPRIMIR        shift and go to state 10
+    ID              shift and go to state 15
 
-    sentencia                      shift and go to state 61
+    sentencia                      shift and go to state 57
     sentencia_si                   shift and go to state 4
     sentencia_mientras             shift and go to state 5
     sentencia_para                 shift and go to state 6
-    statement                      shift and go to state 37
+    statement                      shift and go to state 38
     asignacion                     shift and go to state 7
 
-state 77
+state 72
 
     (35) sentencia_mientras -> HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN . condicion RPAREN PUNTOYCOMA
     (31) condicion -> . expr condiciones expr
@@ -1411,50 +1451,35 @@ state 77
     (16) expr -> . CADENA
     (17) expr -> . CARACTER
     (18) expr -> . ESTADO
-    (19) expr -> . NUMERICO MAS NUMERICO
+    (19) expr -> . expr MAS expr
     (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
     (21) expr -> . NUMERICO DIVIDIR NUMERICO
     (22) expr -> . NUMERICO MENOS NUMERICO
     (23) expr -> . LPAREN expr RPAREN
 
-    ID              shift and go to state 25
-    NUMERICO        shift and go to state 26
-    CADENA          shift and go to state 27
-    CARACTER        shift and go to state 28
-    ESTADO          shift and go to state 29
-    LPAREN          shift and go to state 30
+    ID              shift and go to state 26
+    NUMERICO        shift and go to state 27
+    CADENA          shift and go to state 28
+    CARACTER        shift and go to state 29
+    ESTADO          shift and go to state 30
+    LPAREN          shift and go to state 31
 
-    condicion                      shift and go to state 81
-    expr                           shift and go to state 33
+    condicion                      shift and go to state 76
+    expr                           shift and go to state 34
 
-state 78
+state 73
 
-    (36) sentencia_para -> PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA . expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK
-    (14) expr -> . ID
-    (15) expr -> . NUMERICO
-    (16) expr -> . CADENA
-    (17) expr -> . CARACTER
-    (18) expr -> . ESTADO
-    (19) expr -> . NUMERICO MAS NUMERICO
-    (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
-    (21) expr -> . NUMERICO DIVIDIR NUMERICO
-    (22) expr -> . NUMERICO MENOS NUMERICO
-    (23) expr -> . LPAREN expr RPAREN
+    (36) sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion . RPAREN LBLOCK lista_sentencia RBLOCK
 
-    ID              shift and go to state 25
-    NUMERICO        shift and go to state 26
-    CADENA          shift and go to state 27
-    CARACTER        shift and go to state 28
-    ESTADO          shift and go to state 29
-    LPAREN          shift and go to state 30
+    RPAREN          shift and go to state 77
 
-    expr                           shift and go to state 82
 
-state 79
+state 74
 
     (32) sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK .
     (33) sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK . NO LBLOCK lista_sentencia RBLOCK
 
+    COMENTARIOS     reduce using rule 32 (sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK .)
     LEER            reduce using rule 32 (sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK .)
     IMPRIMIR        reduce using rule 32 (sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK .)
     ID              reduce using rule 32 (sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK .)
@@ -1464,13 +1489,14 @@ state 79
     PARA            reduce using rule 32 (sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK .)
     $end            reduce using rule 32 (sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK .)
     RBLOCK          reduce using rule 32 (sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK .)
-    NO              shift and go to state 83
+    NO              shift and go to state 78
 
 
-state 80
+state 75
 
     (34) sentencia_mientras -> MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK .
 
+    COMENTARIOS     reduce using rule 34 (sentencia_mientras -> MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK .)
     LEER            reduce using rule 34 (sentencia_mientras -> MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK .)
     IMPRIMIR        reduce using rule 34 (sentencia_mientras -> MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK .)
     ID              reduce using rule 34 (sentencia_mientras -> MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK .)
@@ -1482,42 +1508,72 @@ state 80
     RBLOCK          reduce using rule 34 (sentencia_mientras -> MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK .)
 
 
-state 81
+state 76
 
     (35) sentencia_mientras -> HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion . RPAREN PUNTOYCOMA
 
-    RPAREN          shift and go to state 84
+    RPAREN          shift and go to state 79
 
 
-state 82
+state 77
 
-    (36) sentencia_para -> PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr . PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN . LBLOCK lista_sentencia RBLOCK
 
-    PUNTOYCOMA      shift and go to state 85
+    LBLOCK          shift and go to state 80
 
 
-state 83
+state 78
 
     (33) sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO . LBLOCK lista_sentencia RBLOCK
 
-    LBLOCK          shift and go to state 86
+    LBLOCK          shift and go to state 81
 
 
-state 84
+state 79
 
     (35) sentencia_mientras -> HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN . PUNTOYCOMA
 
-    PUNTOYCOMA      shift and go to state 87
+    PUNTOYCOMA      shift and go to state 82
 
 
-state 85
+state 80
 
-    (36) sentencia_para -> PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA . RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK . lista_sentencia RBLOCK
+    (41) lista_sentencia -> . lista_sentencia sentencia
+    (42) lista_sentencia -> . sentencia
+    (37) sentencia -> . sentencia_si
+    (38) sentencia -> . sentencia_mientras
+    (39) sentencia -> . sentencia_para
+    (40) sentencia -> . statement
+    (32) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
+    (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
+    (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
+    (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (5) statement -> . asignacion
+    (6) statement -> . COMENTARIOS
+    (12) statement -> . LEER DOSPUNTOS expr
+    (13) statement -> . IMPRIMIR DOSPUNTOS expr
+    (7) asignacion -> . ID ASIGNAR expr PUNTOYCOMA
 
-    RPAREN          shift and go to state 88
+    SI              shift and go to state 11
+    MIENTRAS        shift and go to state 12
+    HAZ             shift and go to state 13
+    PARA            shift and go to state 14
+    COMENTARIOS     shift and go to state 8
+    LEER            shift and go to state 9
+    IMPRIMIR        shift and go to state 10
+    ID              shift and go to state 15
 
+    asignacion                     shift and go to state 7
+    lista_sentencia                shift and go to state 83
+    sentencia                      shift and go to state 37
+    sentencia_si                   shift and go to state 4
+    sentencia_mientras             shift and go to state 5
+    sentencia_para                 shift and go to state 6
+    statement                      shift and go to state 38
 
-state 86
+state 81
 
     (33) sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK . lista_sentencia RBLOCK
     (41) lista_sentencia -> . lista_sentencia sentencia
@@ -1530,33 +1586,35 @@ state 86
     (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
     (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
     (5) statement -> . asignacion
+    (6) statement -> . COMENTARIOS
     (12) statement -> . LEER DOSPUNTOS expr
     (13) statement -> . IMPRIMIR DOSPUNTOS expr
-    (6) asignacion -> . ID ASIGNAR ID PUNTOYCOMA
-    (7) asignacion -> . ID ASIGNAR tipodato PUNTOYCOMA
+    (7) asignacion -> . ID ASIGNAR expr PUNTOYCOMA
 
-    SI              shift and go to state 10
-    MIENTRAS        shift and go to state 11
-    HAZ             shift and go to state 12
-    PARA            shift and go to state 13
-    LEER            shift and go to state 8
-    IMPRIMIR        shift and go to state 9
-    ID              shift and go to state 14
+    SI              shift and go to state 11
+    MIENTRAS        shift and go to state 12
+    HAZ             shift and go to state 13
+    PARA            shift and go to state 14
+    COMENTARIOS     shift and go to state 8
+    LEER            shift and go to state 9
+    IMPRIMIR        shift and go to state 10
+    ID              shift and go to state 15
 
-    lista_sentencia                shift and go to state 89
-    sentencia                      shift and go to state 36
+    lista_sentencia                shift and go to state 84
+    sentencia                      shift and go to state 37
     sentencia_si                   shift and go to state 4
     sentencia_mientras             shift and go to state 5
     sentencia_para                 shift and go to state 6
-    statement                      shift and go to state 37
+    statement                      shift and go to state 38
     asignacion                     shift and go to state 7
 
-state 87
+state 82
 
     (35) sentencia_mientras -> HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA .
 
+    COMENTARIOS     reduce using rule 35 (sentencia_mientras -> HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA .)
     LEER            reduce using rule 35 (sentencia_mientras -> HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA .)
     IMPRIMIR        reduce using rule 35 (sentencia_mientras -> HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA .)
     ID              reduce using rule 35 (sentencia_mientras -> HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA .)
@@ -1568,14 +1626,43 @@ state 87
     RBLOCK          reduce using rule 35 (sentencia_mientras -> HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA .)
 
 
-state 88
+state 83
 
-    (36) sentencia_para -> PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN . LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia . RBLOCK
+    (41) lista_sentencia -> lista_sentencia . sentencia
+    (37) sentencia -> . sentencia_si
+    (38) sentencia -> . sentencia_mientras
+    (39) sentencia -> . sentencia_para
+    (40) sentencia -> . statement
+    (32) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
+    (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
+    (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
+    (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (5) statement -> . asignacion
+    (6) statement -> . COMENTARIOS
+    (12) statement -> . LEER DOSPUNTOS expr
+    (13) statement -> . IMPRIMIR DOSPUNTOS expr
+    (7) asignacion -> . ID ASIGNAR expr PUNTOYCOMA
 
-    LBLOCK          shift and go to state 90
+    RBLOCK          shift and go to state 85
+    SI              shift and go to state 11
+    MIENTRAS        shift and go to state 12
+    HAZ             shift and go to state 13
+    PARA            shift and go to state 14
+    COMENTARIOS     shift and go to state 8
+    LEER            shift and go to state 9
+    IMPRIMIR        shift and go to state 10
+    ID              shift and go to state 15
 
+    asignacion                     shift and go to state 7
+    sentencia                      shift and go to state 57
+    sentencia_si                   shift and go to state 4
+    sentencia_mientras             shift and go to state 5
+    sentencia_para                 shift and go to state 6
+    statement                      shift and go to state 38
 
-state 89
+state 84
 
     (33) sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia . RBLOCK
     (41) lista_sentencia -> lista_sentencia . sentencia
@@ -1587,69 +1674,51 @@ state 89
     (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
     (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
     (5) statement -> . asignacion
+    (6) statement -> . COMENTARIOS
     (12) statement -> . LEER DOSPUNTOS expr
     (13) statement -> . IMPRIMIR DOSPUNTOS expr
-    (6) asignacion -> . ID ASIGNAR ID PUNTOYCOMA
-    (7) asignacion -> . ID ASIGNAR tipodato PUNTOYCOMA
+    (7) asignacion -> . ID ASIGNAR expr PUNTOYCOMA
 
-    RBLOCK          shift and go to state 91
-    SI              shift and go to state 10
-    MIENTRAS        shift and go to state 11
-    HAZ             shift and go to state 12
-    PARA            shift and go to state 13
-    LEER            shift and go to state 8
-    IMPRIMIR        shift and go to state 9
-    ID              shift and go to state 14
+    RBLOCK          shift and go to state 86
+    SI              shift and go to state 11
+    MIENTRAS        shift and go to state 12
+    HAZ             shift and go to state 13
+    PARA            shift and go to state 14
+    COMENTARIOS     shift and go to state 8
+    LEER            shift and go to state 9
+    IMPRIMIR        shift and go to state 10
+    ID              shift and go to state 15
 
-    sentencia                      shift and go to state 61
+    sentencia                      shift and go to state 57
     sentencia_si                   shift and go to state 4
     sentencia_mientras             shift and go to state 5
     sentencia_para                 shift and go to state 6
-    statement                      shift and go to state 37
+    statement                      shift and go to state 38
     asignacion                     shift and go to state 7
 
-state 90
+state 85
 
-    (36) sentencia_para -> PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK . lista_sentencia RBLOCK
-    (41) lista_sentencia -> . lista_sentencia sentencia
-    (42) lista_sentencia -> . sentencia
-    (37) sentencia -> . sentencia_si
-    (38) sentencia -> . sentencia_mientras
-    (39) sentencia -> . sentencia_para
-    (40) sentencia -> . statement
-    (32) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
-    (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
-    (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
-    (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK
-    (5) statement -> . asignacion
-    (12) statement -> . LEER DOSPUNTOS expr
-    (13) statement -> . IMPRIMIR DOSPUNTOS expr
-    (6) asignacion -> . ID ASIGNAR ID PUNTOYCOMA
-    (7) asignacion -> . ID ASIGNAR tipodato PUNTOYCOMA
+    (36) sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .
 
-    SI              shift and go to state 10
-    MIENTRAS        shift and go to state 11
-    HAZ             shift and go to state 12
-    PARA            shift and go to state 13
-    LEER            shift and go to state 8
-    IMPRIMIR        shift and go to state 9
-    ID              shift and go to state 14
+    COMENTARIOS     reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
+    LEER            reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
+    IMPRIMIR        reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
+    ID              reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
+    SI              reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
+    MIENTRAS        reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
+    HAZ             reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
+    PARA            reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
+    $end            reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
+    RBLOCK          reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
 
-    lista_sentencia                shift and go to state 92
-    sentencia                      shift and go to state 36
-    sentencia_si                   shift and go to state 4
-    sentencia_mientras             shift and go to state 5
-    sentencia_para                 shift and go to state 6
-    statement                      shift and go to state 37
-    asignacion                     shift and go to state 7
 
-state 91
+state 86
 
     (33) sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK .
 
+    COMENTARIOS     reduce using rule 33 (sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK .)
     LEER            reduce using rule 33 (sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK .)
     IMPRIMIR        reduce using rule 33 (sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK .)
     ID              reduce using rule 33 (sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK .)
@@ -1660,60 +1729,11 @@ state 91
     $end            reduce using rule 33 (sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK .)
     RBLOCK          reduce using rule 33 (sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK .)
 
-
-state 92
-
-    (36) sentencia_para -> PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia . RBLOCK
-    (41) lista_sentencia -> lista_sentencia . sentencia
-    (37) sentencia -> . sentencia_si
-    (38) sentencia -> . sentencia_mientras
-    (39) sentencia -> . sentencia_para
-    (40) sentencia -> . statement
-    (32) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
-    (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
-    (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
-    (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK
-    (5) statement -> . asignacion
-    (12) statement -> . LEER DOSPUNTOS expr
-    (13) statement -> . IMPRIMIR DOSPUNTOS expr
-    (6) asignacion -> . ID ASIGNAR ID PUNTOYCOMA
-    (7) asignacion -> . ID ASIGNAR tipodato PUNTOYCOMA
-
-    RBLOCK          shift and go to state 93
-    SI              shift and go to state 10
-    MIENTRAS        shift and go to state 11
-    HAZ             shift and go to state 12
-    PARA            shift and go to state 13
-    LEER            shift and go to state 8
-    IMPRIMIR        shift and go to state 9
-    ID              shift and go to state 14
-
-    sentencia                      shift and go to state 61
-    sentencia_si                   shift and go to state 4
-    sentencia_mientras             shift and go to state 5
-    sentencia_para                 shift and go to state 6
-    statement                      shift and go to state 37
-    asignacion                     shift and go to state 7
-
-state 93
-
-    (36) sentencia_para -> PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK .
-
-    LEER            reduce using rule 36 (sentencia_para -> PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK .)
-    IMPRIMIR        reduce using rule 36 (sentencia_para -> PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK .)
-    ID              reduce using rule 36 (sentencia_para -> PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK .)
-    SI              reduce using rule 36 (sentencia_para -> PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK .)
-    MIENTRAS        reduce using rule 36 (sentencia_para -> PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK .)
-    HAZ             reduce using rule 36 (sentencia_para -> PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK .)
-    PARA            reduce using rule 36 (sentencia_para -> PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK .)
-    $end            reduce using rule 36 (sentencia_para -> PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK .)
-    RBLOCK          reduce using rule 36 (sentencia_para -> PARA LPAREN expr PUNTOYCOMA condicion PUNTOYCOMA expr PUNTOYCOMA RPAREN LBLOCK lista_sentencia RBLOCK .)
-
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
+WARNING: shift/reduce conflict for MAS in state 60 resolved as shift
 WARNING: reduce/reduce conflict in state 2 resolved using rule (statements -> statement)
 WARNING: rejected rule (sentencia -> statement) in state 2
-WARNING: reduce/reduce conflict in state 15 resolved using rule (statements -> statements statement)
-WARNING: rejected rule (sentencia -> statement) in state 15
+WARNING: reduce/reduce conflict in state 16 resolved using rule (statements -> statements statement)
+WARNING: rejected rule (sentencia -> statement) in state 16
