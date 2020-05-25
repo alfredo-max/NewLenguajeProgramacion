@@ -50,16 +50,21 @@ tokens = (
     'RBLOCK',  # }
     'COMILLA',  # "
     'COMILLASIMPLE',  # '
+    'SALTODELINEA',
 
     # Otros
     'ID',
-    'COMENTARIOS'
+    'COMENTARIOS' #multilinea
+   # 'COMENTARIO' #una linea
 )
 
 # Reglas de Expresiones Regualres para token de Contexto simple
 t_CADENA = r'\"[\w*\t*\n*\ *]+\"'
 t_CARACTER = r"\'[a-zA-Z_0-9]\'"
 t_NUMERICO = r'[0-9]+([.][0-9]+)?'
+
+t_COMENTARIOS = r'\*\*[\w*\t*\n*\ *]+\*\*'
+t_SALTODELINEA = r'\n'
 
 t_MAS = r'\+'
 t_MENOS = r'-'
@@ -97,7 +102,7 @@ t_IMPRIMIR = r'imprimir'
 t_LEER = r'leer'
 t_SI = r'SI'
 t_NO = r'NO'
-t_ignore = ' \t'  # Para ignorar los espacios
+t_ignore = ' \t\n'  # Para ignorar los espacios
 
 
 def t_error(t):
