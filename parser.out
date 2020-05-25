@@ -4,6 +4,7 @@ Unused terminals:
 
     COMILLA
     COMILLASIMPLE
+    SALTODELINEA
 
 Grammar
 
@@ -84,6 +85,7 @@ PARA                 : 36
 PUNTOYCOMA           : 7 35 36
 RBLOCK               : 32 33 33 34 35 36
 RPAREN               : 23 32 33 34 35 36
+SALTODELINEA         : 
 SI                   : 32 33
 error                : 
 

@@ -4,6 +4,7 @@ from ply.yacc import yacc
 a = ' a = 67+(97+5); para(a=(678+8); a<=68;  a\n=a+1; ){ **soy un comentario \n multilinea** a=67; haz' \
     '{c = c+1;} mientras(c <= 67);}'
 lexer = lex.lex()
+
 lexer.input(a)
 
 for tok in lexer:
@@ -28,12 +29,6 @@ def p_asignamiento_statements(p):
     '''
     statement : asignacion
     '''
-
-def p_comentario_statements(p):
-    '''
-    statement : COMENTARIOS
-    '''
-
 def p_comentario_statements(p):
     '''
     statement : COMENTARIOS

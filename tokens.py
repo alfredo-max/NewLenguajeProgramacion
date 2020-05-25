@@ -62,10 +62,8 @@ tokens = (
 t_CADENA = r'\"[\w*\t*\n*\ *]+\"'
 t_CARACTER = r"\'[a-zA-Z_0-9]\'"
 t_NUMERICO = r'[0-9]+([.][0-9]+)?'
-
 t_COMENTARIOS = r'\*\*[\w*\t*\n*\ *]+\*\*'
 t_SALTODELINEA = r'\n'
-
 t_MAS = r'\+'
 t_MENOS = r'-'
 t_MULTIPLICAR = r'\*'
@@ -86,7 +84,6 @@ t_ESTADO = r'verdadero|falso'
 t_PARA = r'PARA'
 t_MIENTRAS = r'MIENTRAS'
 t_HAZ = r'HAZ'
-#t_COMENTARIOS = r'\*\*[\w*\t*\n*\ *[:punct:]*]+\*\*'
 t_COMILLA = r'\"'
 t_COMILLASIMPLE = r"\'"
 
@@ -108,4 +105,3 @@ t_ignore = ' \t\n'  # Para ignorar los espacios
 def t_error(t):
     print(f'Caracter ilegal {t.value[0]!r}')
     t.lexer.skip(1)
-
