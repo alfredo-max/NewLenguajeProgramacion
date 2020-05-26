@@ -1,20 +1,11 @@
 from tokens import *
 from ply.yacc import yacc
 
-# def t_error(t):
-#     # print(f'Caracter ilegal {t.value[0]!r}')
-#     salida=f'Caracter ilegal {t.value[0]!r}'
-#     t.lexer.skip(1)
-#     return salida
 
 
 def cargar_codigo():
-    # salida="casa"
-    # return salida
-    # a = 'a = 67+(97+5); para(a=(678+8); a<=68; a=a+1; ){ a=67; haz{c = c+1;} mientras(c <= 67);}'
    
-
-    a='a==b'
+    a='a=[=b['
     lexer = lex.lex()
 
     lexer.input(a)
@@ -164,3 +155,7 @@ def cargar_codigo():
 
     parser = yacc()
     parser.parse(a)
+
+
+# cargar_codigo()
+# salidaweb=getsalida()
