@@ -10,8 +10,8 @@ def cargar_codigo(a):
 
     lexer.input(a)
 
-    for tok in lexer:
-        print(tok)
+    # for tok in lexer:
+    #     print(tok)
 
 
     def p_statements_multiple(p):
