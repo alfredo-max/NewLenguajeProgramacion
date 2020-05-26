@@ -104,17 +104,15 @@ salidailegal=""
 def t_error(t):
     print(f'Caracter ilegal {t.value[0]!r}')
     global salidailegal
-    salidailegal=f'Caracter ilegal {t.value[0]!r}'
+    salidailegal+=f'Caracter ilegal {t.value[0]!r}'+"\n"
     t.lexer.skip(1)
 
-showerror=0
-def getsalida():
-    global showerror
-    if salidailegal!="" and showerror==0:
-    # if 'salidailegal' in globals() and showerror==0:
-        showerror=1
-        return salidailegal
-    else:
-        showerror=0
+def getsalidailegal():
+    global salidailegal
+    if salidailegal=="":
         return "todo bien"
-
+    else:
+        return salidailegal
+def clearsalidailegal():
+    global salidailegal
+    salidailegal=""
