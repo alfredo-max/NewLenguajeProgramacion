@@ -104,7 +104,6 @@ def t_error(t):
     # print(f'Caracter ilegal {t.value[0]!r}')
     global salida
     salida=f'Caracter ilegal {t.value[0]!r}'
-    # print(salida)
     t.lexer.skip(1)
 
 def getsalida():

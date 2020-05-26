@@ -3,9 +3,9 @@ from ply.yacc import yacc
 
 
 
-def cargar_codigo():
+def cargar_codigo(a):
    
-    a='a=[=b['
+    # a='a=[=b['
     lexer = lex.lex()
 
     lexer.input(a)

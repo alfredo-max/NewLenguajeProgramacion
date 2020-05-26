@@ -1,4 +1,4 @@
-from flask import Flask,render_template
+from flask import Flask,render_template,request
 import grammar
 from tokens import getsalida
 
@@ -11,9 +11,10 @@ def home():
 
 @app.route('/codigo',methods=['POST'])
 def codigo():
-    grammar.cargar_codigo()
+    codigo = request.form.get("code")
+    grammar.cargar_codigo(codigo)
     salidaweb=getsalida()
-    return render_template('home.html',salida=salidaweb)
+    return render_template('home.html',codigo=codigo ,salida=salidaweb)
     
 if __name__ == '__main__':
     app.run(debug=True)  
