@@ -100,19 +100,19 @@ t_NO = r'NO'
 t_ignore = ' \t'  # Para ignorar los espacios
 
 
-salidailegal=""
+caracterilegal=""
 def t_error(t):
     print(f'Caracter ilegal {t.value[0]!r}')
-    global salidailegal
-    salidailegal+=f'Caracter ilegal {t.value[0]!r}'+"\n"
+    global caracterilegal
+    caracterilegal+=f'Caracter ilegal {t.value[0]!r}'+"\n"
     t.lexer.skip(1)
 
-def getsalidailegal():
-    global salidailegal
-    if salidailegal=="":
+def get_caracter_ilegal():
+    global caracterilegal
+    if caracterilegal=="":
         return "todo bien"
     else:
-        return salidailegal
-def clearsalidailegal():
-    global salidailegal
-    salidailegal=""
+        return caracterilegal
+def clear_caracter_ilegal():
+    global caracterilegal
+    caracterilegal=""
