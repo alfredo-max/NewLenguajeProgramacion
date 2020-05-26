@@ -3,15 +3,17 @@ from ply.yacc import yacc
 
 errorSyntax = 0
 
-a = ' a = 67+(97+5); para(a=(678+8); a<=68;  a\n=a+1; ){ **soy un comentario \n multilinea** a=67; haz' \
+_a = ' a = 67+(97+5); para(a=(678+8); a<=68;  a\n=a+1; ){ **soy un comentario \n multilinea** a=67; haz' \
     '{c = c+1;} mientras(c <= 67);}'
+a = 'imprimir:(5*5)'
 lexer = lex.lex()
 
 lexer.input(a)
 
-#for tok in lexer:
-#    print(tok)
+for tok in lexer:
+    print(tok)
 
+_var_names = {}
 
 def p_statements_multiple(p):
     '''
@@ -19,18 +21,21 @@ def p_statements_multiple(p):
                | statements sentencia
                | sentencia
     '''
+    
 
 
 def p_statements_single(p):
     '''
     statements : statement
     '''
-
+    p[0] = p[1]
 
 def p_asignamiento_statements(p):
     '''
     statement : asignacion
     '''
+    p[0] = p[1]
+
 def p_comentario_statements(p):
     '''
     statement : COMENTARIOS
@@ -40,7 +45,8 @@ def p_asignar(p):
     '''
         asignacion : ID ASIGNAR expr PUNTOYCOMA
     '''
-
+    _var_names[p[1]] = p[3]
+    #print("p_asignar: {}".format(_var_names[p[1]]))
 
 def p_tipodato(p):
     '''
@@ -49,47 +55,50 @@ def p_tipodato(p):
              | ESTADO
              | CADENA
     '''
-
+    p[0] = p[1]
 
 def p_leer_statement(p):
     '''
     statement : LEER DOSPUNTOS expr
     '''
-
+    p[0] = p[3]
 
 def p_imprimir_statement(p):
     '''
     statement : IMPRIMIR DOSPUNTOS expr
     '''
-
+    if p[3] in _var_names: return print(_var_names[p[3]])
+    print(p[3])
 
 def p_expr_name(p):
     '''
     expr : ID
     '''
+    p[0] = p[1]
 
 def p_expr_numerico(p):
     '''
     expr : NUMERICO
     '''
-
+    p[0] = p[1]
 
 def p_expr_cadena(p):
     '''
     expr : CADENA
     '''
-
+    p[0] = p[1]
 
 def p_expr_caracter(p):
     '''
     expr : CARACTER
     '''
-
+    p[0] = p[1]
 
 def p_expr_estado(p):
     '''
     expr : ESTADO
     '''
+    p[0] = p[1]
 
 def p_expr_opbin(p):
     '''
@@ -98,12 +107,16 @@ def p_expr_opbin(p):
         | NUMERICO DIVIDIR NUMERICO
         | NUMERICO MENOS NUMERICO
     '''
-
+    if p[2] == '+' : p[0] = p[1] + p[3]
+    elif p[2] == '*' : p[0] = p[1] * p[3]
+    elif p[2] == '/' : p[0] = p[1] / p[3]
+    elif p[2] == '-' : p[0] = p[1] - p[3]
 
 def p_expr_group(p):
     '''
     expr : LPAREN expr RPAREN
     '''
+    p[0] = p[2]
 
 
 def p_condiciones(p):
@@ -116,16 +129,29 @@ def p_condiciones(p):
                 | IGUALDAD
                 | DISTINTO
     '''
+    if p[1] == '<': p[0] = '<'
+    elif p[1] == '<=': p[0] = '<='
+    elif p[1] == '>': p[0] = '>'
+    elif p[1] == '>=': p[0] = '>='
+    elif p[1] == '=': p[0] = '='
+    elif p[1] == '==': p[0] = '=='
+    elif p[1] == '!=': p[0] = '!='
 
 
 def p_condicion(p):
     "condicion : expr condiciones expr"
-
+    if p[2] == '<': p[0] = (p[1]) < (p[3])
+    elif p[2] == '<=': p[0] = (p[1]) <= (p[3])
+    elif p[2] == '>': p[0] = (p[1]) > (p[3])
+    elif p[2] == '>=': p[0] = (p[1]) >= (p[3])
+    elif p[2] == '=': p[0] = (p[3])
+    elif p[2] == '==': p[0] = (p[1]) is (p[3])
+    elif p[2] == '!=': p[0] = (p[1]) != (p[3])
 
 def p_sentencia_si(p):
     """sentencia_si : SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
                     | SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO  LBLOCK lista_sentencia RBLOCK
-                    """
+    """
 
 
 def p_sentencia_mientras(p):
@@ -153,12 +179,10 @@ def p_lista_sentencia(p):
     """
 
 def p_error(p):
-    print("Syntax error!")
+    print("Syntax error! {}={} : {}".format(p.type, p.value, p))
     errorSyntax = 1
 
 parser = yacc()
 result = parser.parse(a)
 
-#print(f"Error lexico: {errorLexico}\nError Sintactico: {errorSyntax}")
-def Error():
-    return [errorLexico, errorSyntax]
+#print(result)

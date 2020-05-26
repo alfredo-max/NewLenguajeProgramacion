@@ -19,7 +19,7 @@ palabrasReservadas = {
 ERROR2 = ""
 # lista de tokens
 
-tokens = (
+tokens =(
 
     # Palabras Reservadas
     'NUMERICO',
@@ -64,7 +64,8 @@ tokens = (
 # Reglas de Expresiones Regualres para token de Contexto simple
 t_CADENA = r'\"[\w*\t*\n*\ *]+\"'
 t_CARACTER = r"\'[a-zA-Z_0-9]\'"
-t_NUMERICO = r'[0-9]+([.][0-9]+)?'
+#t_NUMERICO = r'[0-9]+([.][0-9]+)?'
+
 t_COMENTARIOS = r'\*\*[\w*\t*\n*\ *]+\*\*'
 t_SALTODELINEA = r'\n'
 t_MAS = r'\+'
@@ -90,6 +91,10 @@ t_HAZ = r'HAZ'
 t_COMILLA = r'\"'
 t_COMILLASIMPLE = r"\'"
 
+def t_NUMERICO(t):
+    r'[0-9]+([.][0-9]+)?'
+    t.value = int(t.value)
+    return t
 
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
