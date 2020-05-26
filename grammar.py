@@ -5,7 +5,7 @@ errorSyntax = 0
 
 _a = ' a = 67+(97+5); para(a=(678+8); a<=68;  a\n=a+1; ){ **soy un comentario \n multilinea** a=67; haz' \
     '{c = c+1;} mientras(c <= 67);}'
-a = 'imprimir:(5*5)'
+a = "si(3>3){imprimir:4} no{imprimir:3}"
 lexer = lex.lex()
 
 lexer.input(a)
@@ -16,6 +16,9 @@ for tok in lexer:
 _var_names = {}
 
 def p_statements_multiple(p):
+    # declaraciones declaración
+    # declaraciones sentencia
+    # sentecia
     '''
     statements : statements statement
                | statements sentencia
@@ -25,23 +28,27 @@ def p_statements_multiple(p):
 
 
 def p_statements_single(p):
+    # declaraciones declaración
     '''
     statements : statement
     '''
     p[0] = p[1]
 
 def p_asignamiento_statements(p):
+    # declaración asignación
     '''
     statement : asignacion
     '''
     p[0] = p[1]
 
 def p_comentario_statements(p):
+    # declaración comentarios
     '''
     statement : COMENTARIOS
     '''
 
 def p_asignar(p):
+    #identificador signo(=) expresión ;
     '''
         asignacion : ID ASIGNAR expr PUNTOYCOMA
     '''
@@ -58,17 +65,19 @@ def p_tipodato(p):
     p[0] = p[1]
 
 def p_leer_statement(p):
+    # leer : expresión
     '''
     statement : LEER DOSPUNTOS expr
     '''
     p[0] = p[3]
 
 def p_imprimir_statement(p):
+    # imprimir : expresión
     '''
     statement : IMPRIMIR DOSPUNTOS expr
     '''
     if p[3] in _var_names: return print(_var_names[p[3]])
-    print(p[3])
+    return print(p[3])
 
 def p_expr_name(p):
     '''
@@ -149,10 +158,16 @@ def p_condicion(p):
     elif p[2] == '!=': p[0] = (p[1]) != (p[3])
 
 def p_sentencia_si(p):
+    # si ( condicción ) { lista_sentencia }
+    # si ( condición ) { lista_sentencia } no { lista_sentencia }
     """sentencia_si : SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
                     | SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO  LBLOCK lista_sentencia RBLOCK
     """
-
+    #print("p[1]={} p[2]={} p[3]={} p[4]={} p[5]={} p[6]={} p[7]={} p[8]={} p[9]={} p[10]={} p[11]={}".format(p[1],p[2],p[3],p[4],p[5],p[6],p[7],p[8],p[9],p[10],p[11]))
+    if p[3] == True:
+        p[0] = p[6]
+    else:
+        p[0] = p[10]
 
 def p_sentencia_mientras(p):
     """
@@ -171,12 +186,14 @@ def p_sentencia(p):
                     | sentencia_para
                     | statement
     """
-
+    p[0] = p[1]
 
 def p_lista_sentencia(p):
     """lista_sentencia : lista_sentencia sentencia
                     | sentencia
     """
+    print("p[0]={} p[1]={}".format(p[0], p[1]))
+    p[0] = p[1]
 
 def p_error(p):
     print("Syntax error! {}={} : {}".format(p.type, p.value, p))
