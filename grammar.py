@@ -3,6 +3,8 @@ from ply.yacc import yacc
 
 
 
+gramaticaerror=""
+
 def cargar_codigo(a):
    
     # a='a=[=b['
@@ -150,12 +152,34 @@ def cargar_codigo(a):
                         | sentencia
 
         """
-    
-   
+    # def p_error(p):
+    #     global gramaticaerror
+    #     if p:
+    #      gramaticaerror="Syntax error at '%s'" % p.value
+
+    # def p_error(p):
+    #  global gramaticaerror
+    #  if p:
+    #     # print("Syntax error at '%s'" % p.value)
+    #     gramaticaerror="Syntax error at '%s'" % p.value
+    #  else:
+    #     gramaticaerror="Syntax error at EOI"
+    def p_error(p):
+        global gramaticaerror
+        gramaticaerror="error sintactico en la linea {},token='{}' ".format(p.lineno,p.value)
+                      
 
     parser = yacc()
     parser.parse(a)
 
+   
 
+def get_gramaticaerror():
+    global gramaticaerror
+    return gramaticaerror  
+
+def clear_gramaticaerror():
+    global gramaticaerror
+    gramaticaerror=""
 # cargar_codigo()
 # salidaweb=getsalida()

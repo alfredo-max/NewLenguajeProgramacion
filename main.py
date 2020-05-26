@@ -13,9 +13,11 @@ def home():
 def codigo():
     codigo = request.form.get("code") #guarda el codigo del text area
     grammar.cargar_codigo(codigo) #carga el codigo para analizarlo en el lexer y parser
-    salidaweb=get_caracter_ilegal()#toma los errores en la salida ilegal
+    caracterIlegal=get_caracter_ilegal()#toma los errores en la salida ilegal
     clear_caracter_ilegal()#limipia la info de los caracteres ilegales
-    return render_template('home.html',codigo=codigo ,salida=salidaweb)
+    gramaerror=grammar.get_gramaticaerror()
+    grammar.clear_gramaticaerror()
+    return render_template('home.html',codigo=codigo ,salida=caracterIlegal,gramaerror=gramaerror)
     
 if __name__ == '__main__':
     app.run(debug=True)  
