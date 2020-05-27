@@ -31,9 +31,9 @@ Rule 19    expr -> NUMERICO MAS NUMERICO
 Rule 20    expr -> NUMERICO MULTIPLICAR NUMERICO
 Rule 21    expr -> NUMERICO DIVIDIR NUMERICO
 Rule 22    expr -> NUMERICO MENOS NUMERICO
-Rule 23    expr -> ID MAS NUMERICO
-Rule 24    expr -> NUMERICO MAS ID
-Rule 25    expr -> ID MAS ID
+Rule 23    expr -> NUMERICO MAS expr
+Rule 24    expr -> expr MAS NUMERICO
+Rule 25    expr -> expr MAS expr
 Rule 26    expr -> LPAREN expr RPAREN
 Rule 27    condiciones -> MENOR
 Rule 28    condiciones -> MENORIGUAL
@@ -68,7 +68,7 @@ DIVIDIR              : 21
 DOSPUNTOS            : 12 13
 ESTADO               : 10 18
 HAZ                  : 38
-ID                   : 7 14 23 24 25 25
+ID                   : 7 14
 IGUALDAD             : 32
 IMPRIMIR             : 13
 LBLOCK               : 35 36 36 37 38 39
@@ -97,7 +97,7 @@ Nonterminals, with rules where they appear
 asignacion           : 5 39 39
 condicion            : 35 36 37 38 39
 condiciones          : 34
-expr                 : 7 12 13 26 34 34
+expr                 : 7 12 13 23 24 25 25 26 34 34
 lista_sentencia      : 35 36 36 37 38 39 44
 sentencia            : 2 3 44 45
 sentencia_mientras   : 41
@@ -426,9 +426,9 @@ state 18
     (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
     (21) expr -> . NUMERICO DIVIDIR NUMERICO
     (22) expr -> . NUMERICO MENOS NUMERICO
-    (23) expr -> . ID MAS NUMERICO
-    (24) expr -> . NUMERICO MAS ID
-    (25) expr -> . ID MAS ID
+    (23) expr -> . NUMERICO MAS expr
+    (24) expr -> . expr MAS NUMERICO
+    (25) expr -> . expr MAS expr
     (26) expr -> . LPAREN expr RPAREN
 
     ID              shift and go to state 26
@@ -452,9 +452,9 @@ state 19
     (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
     (21) expr -> . NUMERICO DIVIDIR NUMERICO
     (22) expr -> . NUMERICO MENOS NUMERICO
-    (23) expr -> . ID MAS NUMERICO
-    (24) expr -> . NUMERICO MAS ID
-    (25) expr -> . ID MAS ID
+    (23) expr -> . NUMERICO MAS expr
+    (24) expr -> . expr MAS NUMERICO
+    (25) expr -> . expr MAS expr
     (26) expr -> . LPAREN expr RPAREN
 
     ID              shift and go to state 26
@@ -480,9 +480,9 @@ state 20
     (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
     (21) expr -> . NUMERICO DIVIDIR NUMERICO
     (22) expr -> . NUMERICO MENOS NUMERICO
-    (23) expr -> . ID MAS NUMERICO
-    (24) expr -> . NUMERICO MAS ID
-    (25) expr -> . ID MAS ID
+    (23) expr -> . NUMERICO MAS expr
+    (24) expr -> . expr MAS NUMERICO
+    (25) expr -> . expr MAS expr
     (26) expr -> . LPAREN expr RPAREN
 
     ID              shift and go to state 26
@@ -508,9 +508,9 @@ state 21
     (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
     (21) expr -> . NUMERICO DIVIDIR NUMERICO
     (22) expr -> . NUMERICO MENOS NUMERICO
-    (23) expr -> . ID MAS NUMERICO
-    (24) expr -> . NUMERICO MAS ID
-    (25) expr -> . ID MAS ID
+    (23) expr -> . NUMERICO MAS expr
+    (24) expr -> . expr MAS NUMERICO
+    (25) expr -> . expr MAS expr
     (26) expr -> . LPAREN expr RPAREN
 
     ID              shift and go to state 26
@@ -581,9 +581,9 @@ state 24
     (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
     (21) expr -> . NUMERICO DIVIDIR NUMERICO
     (22) expr -> . NUMERICO MENOS NUMERICO
-    (23) expr -> . ID MAS NUMERICO
-    (24) expr -> . NUMERICO MAS ID
-    (25) expr -> . ID MAS ID
+    (23) expr -> . NUMERICO MAS expr
+    (24) expr -> . expr MAS NUMERICO
+    (25) expr -> . expr MAS expr
     (26) expr -> . LPAREN expr RPAREN
 
     ID              shift and go to state 26
@@ -598,6 +598,8 @@ state 24
 state 25
 
     (12) statement -> LEER DOSPUNTOS expr .
+    (24) expr -> expr . MAS NUMERICO
+    (25) expr -> expr . MAS expr
 
     COMENTARIOS     reduce using rule 12 (statement -> LEER DOSPUNTOS expr .)
     LEER            reduce using rule 12 (statement -> LEER DOSPUNTOS expr .)
@@ -609,14 +611,14 @@ state 25
     PARA            reduce using rule 12 (statement -> LEER DOSPUNTOS expr .)
     $end            reduce using rule 12 (statement -> LEER DOSPUNTOS expr .)
     RBLOCK          reduce using rule 12 (statement -> LEER DOSPUNTOS expr .)
+    MAS             shift and go to state 41
 
 
 state 26
 
     (14) expr -> ID .
-    (23) expr -> ID . MAS NUMERICO
-    (25) expr -> ID . MAS ID
 
+    MAS             reduce using rule 14 (expr -> ID .)
     COMENTARIOS     reduce using rule 14 (expr -> ID .)
     LEER            reduce using rule 14 (expr -> ID .)
     IMPRIMIR        reduce using rule 14 (expr -> ID .)
@@ -636,7 +638,6 @@ state 26
     IGUALDAD        reduce using rule 14 (expr -> ID .)
     DISTINTO        reduce using rule 14 (expr -> ID .)
     RPAREN          reduce using rule 14 (expr -> ID .)
-    MAS             shift and go to state 41
 
 
 state 27
@@ -646,8 +647,9 @@ state 27
     (20) expr -> NUMERICO . MULTIPLICAR NUMERICO
     (21) expr -> NUMERICO . DIVIDIR NUMERICO
     (22) expr -> NUMERICO . MENOS NUMERICO
-    (24) expr -> NUMERICO . MAS ID
+    (23) expr -> NUMERICO . MAS expr
 
+  ! shift/reduce conflict for MAS resolved as shift
     COMENTARIOS     reduce using rule 15 (expr -> NUMERICO .)
     LEER            reduce using rule 15 (expr -> NUMERICO .)
     IMPRIMIR        reduce using rule 15 (expr -> NUMERICO .)
@@ -672,11 +674,14 @@ state 27
     DIVIDIR         shift and go to state 44
     MENOS           shift and go to state 45
 
+  ! MAS             [ reduce using rule 15 (expr -> NUMERICO .) ]
+
 
 state 28
 
     (16) expr -> CADENA .
 
+    MAS             reduce using rule 16 (expr -> CADENA .)
     COMENTARIOS     reduce using rule 16 (expr -> CADENA .)
     LEER            reduce using rule 16 (expr -> CADENA .)
     IMPRIMIR        reduce using rule 16 (expr -> CADENA .)
@@ -702,6 +707,7 @@ state 29
 
     (17) expr -> CARACTER .
 
+    MAS             reduce using rule 17 (expr -> CARACTER .)
     COMENTARIOS     reduce using rule 17 (expr -> CARACTER .)
     LEER            reduce using rule 17 (expr -> CARACTER .)
     IMPRIMIR        reduce using rule 17 (expr -> CARACTER .)
@@ -727,6 +733,7 @@ state 30
 
     (18) expr -> ESTADO .
 
+    MAS             reduce using rule 18 (expr -> ESTADO .)
     COMENTARIOS     reduce using rule 18 (expr -> ESTADO .)
     LEER            reduce using rule 18 (expr -> ESTADO .)
     IMPRIMIR        reduce using rule 18 (expr -> ESTADO .)
@@ -760,9 +767,9 @@ state 31
     (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
     (21) expr -> . NUMERICO DIVIDIR NUMERICO
     (22) expr -> . NUMERICO MENOS NUMERICO
-    (23) expr -> . ID MAS NUMERICO
-    (24) expr -> . NUMERICO MAS ID
-    (25) expr -> . ID MAS ID
+    (23) expr -> . NUMERICO MAS expr
+    (24) expr -> . expr MAS NUMERICO
+    (25) expr -> . expr MAS expr
     (26) expr -> . LPAREN expr RPAREN
 
     ID              shift and go to state 26
@@ -777,8 +784,11 @@ state 31
 state 32
 
     (13) statement -> IMPRIMIR DOSPUNTOS expr . PUNTOYCOMA
+    (24) expr -> expr . MAS NUMERICO
+    (25) expr -> expr . MAS expr
 
     PUNTOYCOMA      shift and go to state 47
+    MAS             shift and go to state 41
 
 
 state 33
@@ -792,6 +802,8 @@ state 33
 state 34
 
     (34) condicion -> expr . condiciones expr
+    (24) expr -> expr . MAS NUMERICO
+    (25) expr -> expr . MAS expr
     (27) condiciones -> . MENOR
     (28) condiciones -> . MENORIGUAL
     (29) condiciones -> . MAYOR
@@ -800,6 +812,7 @@ state 34
     (32) condiciones -> . IGUALDAD
     (33) condiciones -> . DISTINTO
 
+    MAS             shift and go to state 41
     MENOR           shift and go to state 50
     MENORIGUAL      shift and go to state 51
     MAYOR           shift and go to state 52
@@ -896,9 +909,9 @@ state 39
     (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
     (21) expr -> . NUMERICO DIVIDIR NUMERICO
     (22) expr -> . NUMERICO MENOS NUMERICO
-    (23) expr -> . ID MAS NUMERICO
-    (24) expr -> . NUMERICO MAS ID
-    (25) expr -> . ID MAS ID
+    (23) expr -> . NUMERICO MAS expr
+    (24) expr -> . expr MAS NUMERICO
+    (25) expr -> . expr MAS expr
     (26) expr -> . LPAREN expr RPAREN
 
     ID              shift and go to state 26
@@ -914,27 +927,66 @@ state 39
 state 40
 
     (7) asignacion -> ID ASIGNAR expr . PUNTOYCOMA
+    (24) expr -> expr . MAS NUMERICO
+    (25) expr -> expr . MAS expr
 
     PUNTOYCOMA      shift and go to state 61
+    MAS             shift and go to state 41
 
 
 state 41
 
-    (23) expr -> ID MAS . NUMERICO
-    (25) expr -> ID MAS . ID
+    (24) expr -> expr MAS . NUMERICO
+    (25) expr -> expr MAS . expr
+    (14) expr -> . ID
+    (15) expr -> . NUMERICO
+    (16) expr -> . CADENA
+    (17) expr -> . CARACTER
+    (18) expr -> . ESTADO
+    (19) expr -> . NUMERICO MAS NUMERICO
+    (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
+    (21) expr -> . NUMERICO DIVIDIR NUMERICO
+    (22) expr -> . NUMERICO MENOS NUMERICO
+    (23) expr -> . NUMERICO MAS expr
+    (24) expr -> . expr MAS NUMERICO
+    (25) expr -> . expr MAS expr
+    (26) expr -> . LPAREN expr RPAREN
 
     NUMERICO        shift and go to state 63
-    ID              shift and go to state 62
+    ID              shift and go to state 26
+    CADENA          shift and go to state 28
+    CARACTER        shift and go to state 29
+    ESTADO          shift and go to state 30
+    LPAREN          shift and go to state 31
 
+    expr                           shift and go to state 62
 
 state 42
 
     (19) expr -> NUMERICO MAS . NUMERICO
-    (24) expr -> NUMERICO MAS . ID
+    (23) expr -> NUMERICO MAS . expr
+    (14) expr -> . ID
+    (15) expr -> . NUMERICO
+    (16) expr -> . CADENA
+    (17) expr -> . CARACTER
+    (18) expr -> . ESTADO
+    (19) expr -> . NUMERICO MAS NUMERICO
+    (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
+    (21) expr -> . NUMERICO DIVIDIR NUMERICO
+    (22) expr -> . NUMERICO MENOS NUMERICO
+    (23) expr -> . NUMERICO MAS expr
+    (24) expr -> . expr MAS NUMERICO
+    (25) expr -> . expr MAS expr
+    (26) expr -> . LPAREN expr RPAREN
 
     NUMERICO        shift and go to state 64
-    ID              shift and go to state 65
+    ID              shift and go to state 26
+    CADENA          shift and go to state 28
+    CARACTER        shift and go to state 29
+    ESTADO          shift and go to state 30
+    LPAREN          shift and go to state 31
 
+    expr                           shift and go to state 65
 
 state 43
 
@@ -960,8 +1012,11 @@ state 45
 state 46
 
     (26) expr -> LPAREN expr . RPAREN
+    (24) expr -> expr . MAS NUMERICO
+    (25) expr -> expr . MAS expr
 
     RPAREN          shift and go to state 69
+    MAS             shift and go to state 41
 
 
 state 47
@@ -1000,9 +1055,9 @@ state 49
     (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
     (21) expr -> . NUMERICO DIVIDIR NUMERICO
     (22) expr -> . NUMERICO MENOS NUMERICO
-    (23) expr -> . ID MAS NUMERICO
-    (24) expr -> . NUMERICO MAS ID
-    (25) expr -> . ID MAS ID
+    (23) expr -> . NUMERICO MAS expr
+    (24) expr -> . expr MAS NUMERICO
+    (25) expr -> . expr MAS expr
     (26) expr -> . LPAREN expr RPAREN
 
     ID              shift and go to state 26
@@ -1158,108 +1213,227 @@ state 61
 
 state 62
 
-    (25) expr -> ID MAS ID .
+    (25) expr -> expr MAS expr .
+    (24) expr -> expr . MAS NUMERICO
+    (25) expr -> expr . MAS expr
 
-    COMENTARIOS     reduce using rule 25 (expr -> ID MAS ID .)
-    LEER            reduce using rule 25 (expr -> ID MAS ID .)
-    IMPRIMIR        reduce using rule 25 (expr -> ID MAS ID .)
-    ID              reduce using rule 25 (expr -> ID MAS ID .)
-    SI              reduce using rule 25 (expr -> ID MAS ID .)
-    MIENTRAS        reduce using rule 25 (expr -> ID MAS ID .)
-    HAZ             reduce using rule 25 (expr -> ID MAS ID .)
-    PARA            reduce using rule 25 (expr -> ID MAS ID .)
-    $end            reduce using rule 25 (expr -> ID MAS ID .)
-    RBLOCK          reduce using rule 25 (expr -> ID MAS ID .)
-    PUNTOYCOMA      reduce using rule 25 (expr -> ID MAS ID .)
-    MENOR           reduce using rule 25 (expr -> ID MAS ID .)
-    MENORIGUAL      reduce using rule 25 (expr -> ID MAS ID .)
-    MAYOR           reduce using rule 25 (expr -> ID MAS ID .)
-    MAYORIGUAL      reduce using rule 25 (expr -> ID MAS ID .)
-    ASIGNAR         reduce using rule 25 (expr -> ID MAS ID .)
-    IGUALDAD        reduce using rule 25 (expr -> ID MAS ID .)
-    DISTINTO        reduce using rule 25 (expr -> ID MAS ID .)
-    RPAREN          reduce using rule 25 (expr -> ID MAS ID .)
+  ! shift/reduce conflict for MAS resolved as shift
+    COMENTARIOS     reduce using rule 25 (expr -> expr MAS expr .)
+    LEER            reduce using rule 25 (expr -> expr MAS expr .)
+    IMPRIMIR        reduce using rule 25 (expr -> expr MAS expr .)
+    ID              reduce using rule 25 (expr -> expr MAS expr .)
+    SI              reduce using rule 25 (expr -> expr MAS expr .)
+    MIENTRAS        reduce using rule 25 (expr -> expr MAS expr .)
+    HAZ             reduce using rule 25 (expr -> expr MAS expr .)
+    PARA            reduce using rule 25 (expr -> expr MAS expr .)
+    $end            reduce using rule 25 (expr -> expr MAS expr .)
+    RBLOCK          reduce using rule 25 (expr -> expr MAS expr .)
+    PUNTOYCOMA      reduce using rule 25 (expr -> expr MAS expr .)
+    MENOR           reduce using rule 25 (expr -> expr MAS expr .)
+    MENORIGUAL      reduce using rule 25 (expr -> expr MAS expr .)
+    MAYOR           reduce using rule 25 (expr -> expr MAS expr .)
+    MAYORIGUAL      reduce using rule 25 (expr -> expr MAS expr .)
+    ASIGNAR         reduce using rule 25 (expr -> expr MAS expr .)
+    IGUALDAD        reduce using rule 25 (expr -> expr MAS expr .)
+    DISTINTO        reduce using rule 25 (expr -> expr MAS expr .)
+    RPAREN          reduce using rule 25 (expr -> expr MAS expr .)
+    MAS             shift and go to state 41
+
+  ! MAS             [ reduce using rule 25 (expr -> expr MAS expr .) ]
 
 
 state 63
 
-    (23) expr -> ID MAS NUMERICO .
+    (24) expr -> expr MAS NUMERICO .
+    (15) expr -> NUMERICO .
+    (19) expr -> NUMERICO . MAS NUMERICO
+    (20) expr -> NUMERICO . MULTIPLICAR NUMERICO
+    (21) expr -> NUMERICO . DIVIDIR NUMERICO
+    (22) expr -> NUMERICO . MENOS NUMERICO
+    (23) expr -> NUMERICO . MAS expr
 
-    COMENTARIOS     reduce using rule 23 (expr -> ID MAS NUMERICO .)
-    LEER            reduce using rule 23 (expr -> ID MAS NUMERICO .)
-    IMPRIMIR        reduce using rule 23 (expr -> ID MAS NUMERICO .)
-    ID              reduce using rule 23 (expr -> ID MAS NUMERICO .)
-    SI              reduce using rule 23 (expr -> ID MAS NUMERICO .)
-    MIENTRAS        reduce using rule 23 (expr -> ID MAS NUMERICO .)
-    HAZ             reduce using rule 23 (expr -> ID MAS NUMERICO .)
-    PARA            reduce using rule 23 (expr -> ID MAS NUMERICO .)
-    $end            reduce using rule 23 (expr -> ID MAS NUMERICO .)
-    RBLOCK          reduce using rule 23 (expr -> ID MAS NUMERICO .)
-    PUNTOYCOMA      reduce using rule 23 (expr -> ID MAS NUMERICO .)
-    MENOR           reduce using rule 23 (expr -> ID MAS NUMERICO .)
-    MENORIGUAL      reduce using rule 23 (expr -> ID MAS NUMERICO .)
-    MAYOR           reduce using rule 23 (expr -> ID MAS NUMERICO .)
-    MAYORIGUAL      reduce using rule 23 (expr -> ID MAS NUMERICO .)
-    ASIGNAR         reduce using rule 23 (expr -> ID MAS NUMERICO .)
-    IGUALDAD        reduce using rule 23 (expr -> ID MAS NUMERICO .)
-    DISTINTO        reduce using rule 23 (expr -> ID MAS NUMERICO .)
-    RPAREN          reduce using rule 23 (expr -> ID MAS NUMERICO .)
+  ! reduce/reduce conflict for MAS resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for COMENTARIOS resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for LEER resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for IMPRIMIR resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for ID resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for SI resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for MIENTRAS resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for HAZ resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for PARA resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for $end resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for RBLOCK resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for PUNTOYCOMA resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for MENOR resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for MENORIGUAL resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for MAYOR resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for MAYORIGUAL resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for ASIGNAR resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for IGUALDAD resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for DISTINTO resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for RPAREN resolved using rule 15 (expr -> NUMERICO .)
+  ! shift/reduce conflict for MAS resolved as shift
+    COMENTARIOS     reduce using rule 15 (expr -> NUMERICO .)
+    LEER            reduce using rule 15 (expr -> NUMERICO .)
+    IMPRIMIR        reduce using rule 15 (expr -> NUMERICO .)
+    ID              reduce using rule 15 (expr -> NUMERICO .)
+    SI              reduce using rule 15 (expr -> NUMERICO .)
+    MIENTRAS        reduce using rule 15 (expr -> NUMERICO .)
+    HAZ             reduce using rule 15 (expr -> NUMERICO .)
+    PARA            reduce using rule 15 (expr -> NUMERICO .)
+    $end            reduce using rule 15 (expr -> NUMERICO .)
+    RBLOCK          reduce using rule 15 (expr -> NUMERICO .)
+    PUNTOYCOMA      reduce using rule 15 (expr -> NUMERICO .)
+    MENOR           reduce using rule 15 (expr -> NUMERICO .)
+    MENORIGUAL      reduce using rule 15 (expr -> NUMERICO .)
+    MAYOR           reduce using rule 15 (expr -> NUMERICO .)
+    MAYORIGUAL      reduce using rule 15 (expr -> NUMERICO .)
+    ASIGNAR         reduce using rule 15 (expr -> NUMERICO .)
+    IGUALDAD        reduce using rule 15 (expr -> NUMERICO .)
+    DISTINTO        reduce using rule 15 (expr -> NUMERICO .)
+    RPAREN          reduce using rule 15 (expr -> NUMERICO .)
+    MAS             shift and go to state 42
+    MULTIPLICAR     shift and go to state 43
+    DIVIDIR         shift and go to state 44
+    MENOS           shift and go to state 45
+
+  ! MAS             [ reduce using rule 24 (expr -> expr MAS NUMERICO .) ]
+  ! COMENTARIOS     [ reduce using rule 24 (expr -> expr MAS NUMERICO .) ]
+  ! LEER            [ reduce using rule 24 (expr -> expr MAS NUMERICO .) ]
+  ! IMPRIMIR        [ reduce using rule 24 (expr -> expr MAS NUMERICO .) ]
+  ! ID              [ reduce using rule 24 (expr -> expr MAS NUMERICO .) ]
+  ! SI              [ reduce using rule 24 (expr -> expr MAS NUMERICO .) ]
+  ! MIENTRAS        [ reduce using rule 24 (expr -> expr MAS NUMERICO .) ]
+  ! HAZ             [ reduce using rule 24 (expr -> expr MAS NUMERICO .) ]
+  ! PARA            [ reduce using rule 24 (expr -> expr MAS NUMERICO .) ]
+  ! $end            [ reduce using rule 24 (expr -> expr MAS NUMERICO .) ]
+  ! RBLOCK          [ reduce using rule 24 (expr -> expr MAS NUMERICO .) ]
+  ! PUNTOYCOMA      [ reduce using rule 24 (expr -> expr MAS NUMERICO .) ]
+  ! MENOR           [ reduce using rule 24 (expr -> expr MAS NUMERICO .) ]
+  ! MENORIGUAL      [ reduce using rule 24 (expr -> expr MAS NUMERICO .) ]
+  ! MAYOR           [ reduce using rule 24 (expr -> expr MAS NUMERICO .) ]
+  ! MAYORIGUAL      [ reduce using rule 24 (expr -> expr MAS NUMERICO .) ]
+  ! ASIGNAR         [ reduce using rule 24 (expr -> expr MAS NUMERICO .) ]
+  ! IGUALDAD        [ reduce using rule 24 (expr -> expr MAS NUMERICO .) ]
+  ! DISTINTO        [ reduce using rule 24 (expr -> expr MAS NUMERICO .) ]
+  ! RPAREN          [ reduce using rule 24 (expr -> expr MAS NUMERICO .) ]
+  ! MAS             [ reduce using rule 15 (expr -> NUMERICO .) ]
 
 
 state 64
 
     (19) expr -> NUMERICO MAS NUMERICO .
+    (15) expr -> NUMERICO .
+    (19) expr -> NUMERICO . MAS NUMERICO
+    (20) expr -> NUMERICO . MULTIPLICAR NUMERICO
+    (21) expr -> NUMERICO . DIVIDIR NUMERICO
+    (22) expr -> NUMERICO . MENOS NUMERICO
+    (23) expr -> NUMERICO . MAS expr
 
-    COMENTARIOS     reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    LEER            reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    IMPRIMIR        reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    ID              reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    SI              reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    MIENTRAS        reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    HAZ             reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    PARA            reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    $end            reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    RBLOCK          reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    PUNTOYCOMA      reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    MENOR           reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    MENORIGUAL      reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    MAYOR           reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    MAYORIGUAL      reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    ASIGNAR         reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    IGUALDAD        reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    DISTINTO        reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
-    RPAREN          reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .)
+  ! reduce/reduce conflict for MAS resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for COMENTARIOS resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for LEER resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for IMPRIMIR resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for ID resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for SI resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for MIENTRAS resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for HAZ resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for PARA resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for $end resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for RBLOCK resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for PUNTOYCOMA resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for MENOR resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for MENORIGUAL resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for MAYOR resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for MAYORIGUAL resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for ASIGNAR resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for IGUALDAD resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for DISTINTO resolved using rule 15 (expr -> NUMERICO .)
+  ! reduce/reduce conflict for RPAREN resolved using rule 15 (expr -> NUMERICO .)
+  ! shift/reduce conflict for MAS resolved as shift
+    COMENTARIOS     reduce using rule 15 (expr -> NUMERICO .)
+    LEER            reduce using rule 15 (expr -> NUMERICO .)
+    IMPRIMIR        reduce using rule 15 (expr -> NUMERICO .)
+    ID              reduce using rule 15 (expr -> NUMERICO .)
+    SI              reduce using rule 15 (expr -> NUMERICO .)
+    MIENTRAS        reduce using rule 15 (expr -> NUMERICO .)
+    HAZ             reduce using rule 15 (expr -> NUMERICO .)
+    PARA            reduce using rule 15 (expr -> NUMERICO .)
+    $end            reduce using rule 15 (expr -> NUMERICO .)
+    RBLOCK          reduce using rule 15 (expr -> NUMERICO .)
+    PUNTOYCOMA      reduce using rule 15 (expr -> NUMERICO .)
+    MENOR           reduce using rule 15 (expr -> NUMERICO .)
+    MENORIGUAL      reduce using rule 15 (expr -> NUMERICO .)
+    MAYOR           reduce using rule 15 (expr -> NUMERICO .)
+    MAYORIGUAL      reduce using rule 15 (expr -> NUMERICO .)
+    ASIGNAR         reduce using rule 15 (expr -> NUMERICO .)
+    IGUALDAD        reduce using rule 15 (expr -> NUMERICO .)
+    DISTINTO        reduce using rule 15 (expr -> NUMERICO .)
+    RPAREN          reduce using rule 15 (expr -> NUMERICO .)
+    MAS             shift and go to state 42
+    MULTIPLICAR     shift and go to state 43
+    DIVIDIR         shift and go to state 44
+    MENOS           shift and go to state 45
+
+  ! MAS             [ reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .) ]
+  ! COMENTARIOS     [ reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .) ]
+  ! LEER            [ reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .) ]
+  ! IMPRIMIR        [ reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .) ]
+  ! ID              [ reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .) ]
+  ! SI              [ reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .) ]
+  ! MIENTRAS        [ reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .) ]
+  ! HAZ             [ reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .) ]
+  ! PARA            [ reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .) ]
+  ! $end            [ reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .) ]
+  ! RBLOCK          [ reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .) ]
+  ! PUNTOYCOMA      [ reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .) ]
+  ! MENOR           [ reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .) ]
+  ! MENORIGUAL      [ reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .) ]
+  ! MAYOR           [ reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .) ]
+  ! MAYORIGUAL      [ reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .) ]
+  ! ASIGNAR         [ reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .) ]
+  ! IGUALDAD        [ reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .) ]
+  ! DISTINTO        [ reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .) ]
+  ! RPAREN          [ reduce using rule 19 (expr -> NUMERICO MAS NUMERICO .) ]
+  ! MAS             [ reduce using rule 15 (expr -> NUMERICO .) ]
 
 
 state 65
 
-    (24) expr -> NUMERICO MAS ID .
+    (23) expr -> NUMERICO MAS expr .
+    (24) expr -> expr . MAS NUMERICO
+    (25) expr -> expr . MAS expr
 
-    COMENTARIOS     reduce using rule 24 (expr -> NUMERICO MAS ID .)
-    LEER            reduce using rule 24 (expr -> NUMERICO MAS ID .)
-    IMPRIMIR        reduce using rule 24 (expr -> NUMERICO MAS ID .)
-    ID              reduce using rule 24 (expr -> NUMERICO MAS ID .)
-    SI              reduce using rule 24 (expr -> NUMERICO MAS ID .)
-    MIENTRAS        reduce using rule 24 (expr -> NUMERICO MAS ID .)
-    HAZ             reduce using rule 24 (expr -> NUMERICO MAS ID .)
-    PARA            reduce using rule 24 (expr -> NUMERICO MAS ID .)
-    $end            reduce using rule 24 (expr -> NUMERICO MAS ID .)
-    RBLOCK          reduce using rule 24 (expr -> NUMERICO MAS ID .)
-    PUNTOYCOMA      reduce using rule 24 (expr -> NUMERICO MAS ID .)
-    MENOR           reduce using rule 24 (expr -> NUMERICO MAS ID .)
-    MENORIGUAL      reduce using rule 24 (expr -> NUMERICO MAS ID .)
-    MAYOR           reduce using rule 24 (expr -> NUMERICO MAS ID .)
-    MAYORIGUAL      reduce using rule 24 (expr -> NUMERICO MAS ID .)
-    ASIGNAR         reduce using rule 24 (expr -> NUMERICO MAS ID .)
-    IGUALDAD        reduce using rule 24 (expr -> NUMERICO MAS ID .)
-    DISTINTO        reduce using rule 24 (expr -> NUMERICO MAS ID .)
-    RPAREN          reduce using rule 24 (expr -> NUMERICO MAS ID .)
+  ! shift/reduce conflict for MAS resolved as shift
+    COMENTARIOS     reduce using rule 23 (expr -> NUMERICO MAS expr .)
+    LEER            reduce using rule 23 (expr -> NUMERICO MAS expr .)
+    IMPRIMIR        reduce using rule 23 (expr -> NUMERICO MAS expr .)
+    ID              reduce using rule 23 (expr -> NUMERICO MAS expr .)
+    SI              reduce using rule 23 (expr -> NUMERICO MAS expr .)
+    MIENTRAS        reduce using rule 23 (expr -> NUMERICO MAS expr .)
+    HAZ             reduce using rule 23 (expr -> NUMERICO MAS expr .)
+    PARA            reduce using rule 23 (expr -> NUMERICO MAS expr .)
+    $end            reduce using rule 23 (expr -> NUMERICO MAS expr .)
+    RBLOCK          reduce using rule 23 (expr -> NUMERICO MAS expr .)
+    PUNTOYCOMA      reduce using rule 23 (expr -> NUMERICO MAS expr .)
+    MENOR           reduce using rule 23 (expr -> NUMERICO MAS expr .)
+    MENORIGUAL      reduce using rule 23 (expr -> NUMERICO MAS expr .)
+    MAYOR           reduce using rule 23 (expr -> NUMERICO MAS expr .)
+    MAYORIGUAL      reduce using rule 23 (expr -> NUMERICO MAS expr .)
+    ASIGNAR         reduce using rule 23 (expr -> NUMERICO MAS expr .)
+    IGUALDAD        reduce using rule 23 (expr -> NUMERICO MAS expr .)
+    DISTINTO        reduce using rule 23 (expr -> NUMERICO MAS expr .)
+    RPAREN          reduce using rule 23 (expr -> NUMERICO MAS expr .)
+    MAS             shift and go to state 41
+
+  ! MAS             [ reduce using rule 23 (expr -> NUMERICO MAS expr .) ]
 
 
 state 66
 
     (20) expr -> NUMERICO MULTIPLICAR NUMERICO .
 
+    MAS             reduce using rule 20 (expr -> NUMERICO MULTIPLICAR NUMERICO .)
     COMENTARIOS     reduce using rule 20 (expr -> NUMERICO MULTIPLICAR NUMERICO .)
     LEER            reduce using rule 20 (expr -> NUMERICO MULTIPLICAR NUMERICO .)
     IMPRIMIR        reduce using rule 20 (expr -> NUMERICO MULTIPLICAR NUMERICO .)
@@ -1285,6 +1459,7 @@ state 67
 
     (21) expr -> NUMERICO DIVIDIR NUMERICO .
 
+    MAS             reduce using rule 21 (expr -> NUMERICO DIVIDIR NUMERICO .)
     COMENTARIOS     reduce using rule 21 (expr -> NUMERICO DIVIDIR NUMERICO .)
     LEER            reduce using rule 21 (expr -> NUMERICO DIVIDIR NUMERICO .)
     IMPRIMIR        reduce using rule 21 (expr -> NUMERICO DIVIDIR NUMERICO .)
@@ -1310,6 +1485,7 @@ state 68
 
     (22) expr -> NUMERICO MENOS NUMERICO .
 
+    MAS             reduce using rule 22 (expr -> NUMERICO MENOS NUMERICO .)
     COMENTARIOS     reduce using rule 22 (expr -> NUMERICO MENOS NUMERICO .)
     LEER            reduce using rule 22 (expr -> NUMERICO MENOS NUMERICO .)
     IMPRIMIR        reduce using rule 22 (expr -> NUMERICO MENOS NUMERICO .)
@@ -1335,6 +1511,7 @@ state 69
 
     (26) expr -> LPAREN expr RPAREN .
 
+    MAS             reduce using rule 26 (expr -> LPAREN expr RPAREN .)
     COMENTARIOS     reduce using rule 26 (expr -> LPAREN expr RPAREN .)
     LEER            reduce using rule 26 (expr -> LPAREN expr RPAREN .)
     IMPRIMIR        reduce using rule 26 (expr -> LPAREN expr RPAREN .)
@@ -1397,9 +1574,12 @@ state 70
 state 71
 
     (34) condicion -> expr condiciones expr .
+    (24) expr -> expr . MAS NUMERICO
+    (25) expr -> expr . MAS expr
 
     RPAREN          reduce using rule 34 (condicion -> expr condiciones expr .)
     PUNTOYCOMA      reduce using rule 34 (condicion -> expr condiciones expr .)
+    MAS             shift and go to state 41
 
 
 state 72
@@ -1541,9 +1721,9 @@ state 77
     (20) expr -> . NUMERICO MULTIPLICAR NUMERICO
     (21) expr -> . NUMERICO DIVIDIR NUMERICO
     (22) expr -> . NUMERICO MENOS NUMERICO
-    (23) expr -> . ID MAS NUMERICO
-    (24) expr -> . NUMERICO MAS ID
-    (25) expr -> . ID MAS ID
+    (23) expr -> . NUMERICO MAS expr
+    (24) expr -> . expr MAS NUMERICO
+    (25) expr -> . expr MAS expr
     (26) expr -> . LPAREN expr RPAREN
 
     ID              shift and go to state 26
@@ -1821,7 +2001,18 @@ state 91
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
+WARNING: shift/reduce conflict for MAS in state 27 resolved as shift
+WARNING: shift/reduce conflict for MAS in state 62 resolved as shift
+WARNING: shift/reduce conflict for MAS in state 63 resolved as shift
+WARNING: shift/reduce conflict for MAS in state 64 resolved as shift
+WARNING: shift/reduce conflict for MAS in state 65 resolved as shift
 WARNING: reduce/reduce conflict in state 2 resolved using rule (statements -> statement)
 WARNING: rejected rule (sentencia -> statement) in state 2
 WARNING: reduce/reduce conflict in state 16 resolved using rule (statements -> statements statement)
 WARNING: rejected rule (sentencia -> statement) in state 16
+WARNING: reduce/reduce conflict in state 63 resolved using rule (expr -> NUMERICO)
+WARNING: rejected rule (expr -> expr MAS NUMERICO) in state 63
+WARNING: reduce/reduce conflict in state 64 resolved using rule (expr -> NUMERICO)
+WARNING: rejected rule (expr -> NUMERICO MAS NUMERICO) in state 64
+WARNING: Rule (expr -> expr MAS NUMERICO) is never reduced
+WARNING: Rule (expr -> NUMERICO MAS NUMERICO) is never reduced
