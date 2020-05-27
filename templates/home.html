@@ -71,8 +71,31 @@
                 <button type="button" class="btn btn-primary">Ejecutar</button>
                 <button type="button" class="btn btn-danger">Cancelar</button>
             </div>
+           
 
         </section>
+        <footer>
+            <div class="bg-primary">
+              <div class="row">
+                <div class="col-md-4 text-white" >
+                     <h5>ALFREDO ALMARALES MANGA</h5>     
+                     <h5>DANIEL VEGA CAMARGO</h5>   
+                     <h5>DANIEL FONTALVO ORTIZ</h5>   
+                     <h5>JULIO FUENTES MARIO</h5> 
+                </div>
+                <div class="col-md-4">
+                    <img src="{{ url_for('static', filename='images/universidad.png') }}">
+                </div>
+                <div class="col-md-4 text-white">
+                  <h4>INGENIERÍA DE SISTEMAS</h4>     
+                  <h4>COMPILADORES</h4>   
+                  <h4>2020-1</h4>   
+                 </div>
+                </div>
+                </div>
+             </footer>
+
+
         <script>
             var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
             // muestro las líneas de código
@@ -82,29 +105,7 @@
             // esto deshabilita la opción de reescribir
             readOnly: false,//true,
             });
-        </script>
-
-
-  <div class="container">
-    <div class="row">
-      <div class="col-md-4 text-white" >
-           <h5>ALFREDO ALMARALES MANGA</h5>     
-           <h5>DANIEL VEGA CAMARGO</h5>   
-           <h5>DANIEL FONTALVO ORTIZ</h5>   
-           <h5>JULIO FUENTES MARIO</h5> 
-      </div>
-      <div class="col-md-4">
-          <img src="universidad.png">
-      </div>
-      <div class="col-md-4 text-white">
-        <h4>INGENIERÍA DE SISTEMAS</h4>     
-        <h4>COMPILADORES</h4>   
-        <h4>2020-1</h4>   
-       </div>
-      </div>
-      </div>
-   </footer>
-    
+        </script>  
     </body>
 </html>
 
