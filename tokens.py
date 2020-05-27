@@ -108,6 +108,7 @@ t_NO = r'NO'
 t_ignore = ' \t\n'  # Para ignorar los espacios
 
 
+
 caracterilegal=""
 def t_error(t):
     # print(f'Caracter ilegal {t.value[0]!r}')
@@ -115,6 +116,7 @@ def t_error(t):
     # caracterilegal+=f'Caracter ilegal {t.value[0]!r}'+"\n"
     # caracterilegal+='Caracter ilegal "'+str(t.value)+'"en la linea '+str(t.lineno)
     caracterilegal+="caracter ilegal en la linea {},token='{}' ".format(t.lineno,t.value[0])+"\n"
+    print(caracterilegal)
     t.lexer.skip(1)
 
 def get_caracter_ilegal():

@@ -5,10 +5,11 @@ from ply.yacc import yacc
 gramaticaerror=""
 
 def cargar_codigo(a):
-
+    # a="a=5; \n b=4;"
     lexer = lex.lex()
 
     lexer.input(a)
+    # print(a)
 
     #_var_names = {}
 
@@ -214,14 +215,16 @@ def cargar_codigo(a):
         global caracterilegal
         if p:
            gramaticaerror="error sintactico en la linea {},token='{}' ".format(p.lineno,p.value)
+           print("error sintactico en la linea {},token='{}' ".format(p.lineno,p.value))
         elif caracterilegal=="":
             gramaticaerror="verifique si falta un ';' "
+            print("verifique si falta un ';' ")
                
     parser = yacc()
     parser.parse(a)
 
    
-
+# cargar_codigo()
 def get_gramaticaerror():
     global gramaticaerror
     return gramaticaerror  
