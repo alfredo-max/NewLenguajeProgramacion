@@ -66,17 +66,36 @@
                             <div class="form-group">
                                 <!-- Aqui va el codigo de js -->
                                 <label for="exampleFormControlTextarea1">Salida</label>
-                                <textarea class="form-control disabled" id="exampleFormControlTextarea1" rows="20" readonly>{{salida}}{{gramaerror}}{{gramagood}}</textarea>
+                                <textarea class="form-control disabled" id="exampleFormControlTextarea1" rows="20" readonly>{{salida}}{{gramaerror}}{{imprimir}}</textarea>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                
-            </div>
-        </section><br>
-        
+           
+        </section>
+        <footer>
+            <div class="bg-primary">
+              <div class="row">
+                <div class="col-md-4 text-white" >
+                     <h5>ALFREDO ALMARALES MANGA</h5>     
+                     <h5>DANIEL VEGA CAMARGO</h5>   
+                     <h5>DANIEL FONTALVO ORTIZ</h5>   
+                     <h5>JULIO FUENTES MARIO</h5> 
+                </div>
+                <div class="col-md-4">
+                    <img src="{{ url_for('static', filename='images/universidad.png') }}">
+                </div>
+                <div class="col-md-4 text-white">
+                  <h4>INGENIERÍA DE SISTEMAS</h4>     
+                  <h4>COMPILADORES</h4>   
+                  <h4>2020-1</h4>   
+                 </div>
+                </div>
+                </div>
+             </footer>
+
+
         <script>
             var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
             // muestro las líneas de código
@@ -86,28 +105,7 @@
             // esto deshabilita la opción de reescribir
             readOnly: false,//true,
             });
-        </script>
-<footer>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 text-black" >
-                <h5>ALFREDO ALMARALES MANGA</h5>     
-                <h5>DANIEL VEGA CAMARGO</h5>   
-                <h5>DANIEL FONTALVO ORTIZ</h5>   
-            <h5>JULIO FUENTES MARIO</h5> 
-        </div>
-        <div class="col-md-4">
-            <img src="static/img/universidad.png">
-        </div>
-            <div class="col-md-4 text-black">
-                <h4>INGENIERÍA DE SISTEMAS</h4>     
-                <h4>COMPILADORES</h4>   
-                <h4>2020-1</h4>   
-            </div>
-        </div>
-    </div>
-</footer>
-    
+        </script>  
     </body>
 </html>
 
