@@ -3,7 +3,7 @@ from ply.yacc import yacc
 
 
 gramaticaerror=""
-
+imprimircad=""
 def cargar_codigo(a):
     # a="a=5; \n b=4;"
     lexer = lex.lex()
@@ -23,14 +23,12 @@ def cargar_codigo(a):
                 | sentencia
         '''
         
-
-
     def p_statements_single(p):
         # declaraciones declaración
         '''
         statements : statement
         '''
-        #p[0] = p[1]
+        p[0] = p[1]
 
     def p_asignamiento_statements(p):
         # declaración asignación
@@ -75,7 +73,9 @@ def cargar_codigo(a):
         statement : IMPRIMIR DOSPUNTOS expr PUNTOYCOMA
         '''
         #if p[3] in _var_names: return print(_var_names[p[3]])
-        #return print(p[3])
+        global imprimircad
+        imprimircad=p[3]
+        return print(p[3])
 
     def p_expr_name(p):
         '''
@@ -93,7 +93,7 @@ def cargar_codigo(a):
         '''
         expr : CADENA
         '''
-        #p[0] = p[1]
+        p[0] = p[1]
 
     def p_expr_caracter(p):
         '''
@@ -233,3 +233,6 @@ def clear_gramaticaerror():
     global gramaticaerror
     gramaticaerror=""
 
+def imprimircadena():
+    global imprimircad
+    return imprimircad
