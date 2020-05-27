@@ -99,13 +99,17 @@ def t_ID(t):
     if (t.value in palabrasReservadas):
         t.type = palabrasReservadas[t.value]
     return t
-
+    
+def t_SALTODELINEAe(t):
+     r'\n+'
+     t.lexer.lineno += len(t.value)
 
 t_IMPRIMIR = r'imprimir'
 t_LEER = r'leer'
 t_SI = r'SI'
 t_NO = r'NO'
-t_ignore = ' \t\n'  # Para ignorar los espacios
+# t_ignore = ' \t\n'  # Para ignorar los espacios
+t_ignore = ' \t' 
 
 
 

@@ -215,7 +215,7 @@ def cargar_codigo(a):
         global caracterilegal
         if p:
            gramaticaerror="error sintactico en la linea {},token='{}' ".format(p.lineno,p.value)
-           print("error sintactico en la linea {},token='{}' ".format(p.lineno,p.value))
+           print("error sintactico en la linea {},token='{}' ".format(len(p.value),p.value))
         elif caracterilegal=="":
             gramaticaerror="verifique si falta un ';' "
             print("verifique si falta un ';' ")
