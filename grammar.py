@@ -1,4 +1,4 @@
-from tokens import *
+from tokens import*
 from ply.yacc import yacc
 
 
@@ -40,7 +40,7 @@ def cargar_codigo(a):
         '''
             asignacion : ID ASIGNAR expr PUNTOYCOMA
         '''
-
+   
     def p_tipodato(p):
         '''
         tipodato : NUMERICO
@@ -152,23 +152,14 @@ def cargar_codigo(a):
                         | sentencia
 
         """
-    # def p_error(p):
-    #     global gramaticaerror
-    #     if p:
-    #      gramaticaerror="Syntax error at '%s'" % p.value
-
-    # def p_error(p):
-    #  global gramaticaerror
-    #  if p:
-    #     # print("Syntax error at '%s'" % p.value)
-    #     gramaticaerror="Syntax error at '%s'" % p.value
-    #  else:
-    #     gramaticaerror="Syntax error at EOI"
     def p_error(p):
         global gramaticaerror
-        gramaticaerror="error sintactico en la linea {},token='{}' ".format(p.lineno,p.value)
-                      
-
+        global caracterilegal
+        if p:
+           gramaticaerror="error sintactico en la linea {},token='{}' ".format(p.lineno,p.value)
+        elif caracterilegal=="":
+            gramaticaerror="verifique si falta un ';' "
+               
     parser = yacc()
     parser.parse(a)
 
