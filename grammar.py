@@ -113,6 +113,9 @@ def cargar_codigo(a):
             | NUMERICO MULTIPLICAR NUMERICO
             | NUMERICO DIVIDIR NUMERICO
             | NUMERICO MENOS NUMERICO
+            | ID MAS NUMERICO
+            | NUMERICO MAS ID
+            | ID MAS ID
         '''
         #if p[2] == '+' : p[0] = p[1] + p[3]
         #elif p[2] == '*' : p[0] = p[1] * p[3]
