@@ -1,4 +1,5 @@
 import ply.lex as lex
+
 palabrasReservadas = {
     "imprimir": "IMPRIMIR",
     "leer": "LEER",
@@ -16,7 +17,7 @@ palabrasReservadas = {
 ERROR2 = ""
 # lista de tokens
 
-tokens = (
+tokens =(
 
     # Palabras Reservadas
     'NUMERICO',
@@ -50,17 +51,21 @@ tokens = (
     'RBLOCK',  # }
     'COMILLA',  # "
     'COMILLASIMPLE',  # '
+    'SALTODELINEA',
 
     # Otros
     'ID',
-    'COMENTARIOS'
+    'COMENTARIOS' #multilinea
+   # 'COMENTARIO' #una linea
 )
 
 # Reglas de Expresiones Regualres para token de Contexto simple
 t_CADENA = r'\"[\w*\t*\n*\ *]+\"'
 t_CARACTER = r"\'[a-zA-Z_0-9]\'"
-t_NUMERICO = r'[0-9]+([.][0-9]+)?'
+#t_NUMERICO = r'[0-9]+([.][0-9]+)?'
 
+t_COMENTARIOS = r'\*\*[\w*\t*\n*\ *]+\*\*'
+t_SALTODELINEA = r'\n'
 t_MAS = r'\+'
 t_MENOS = r'-'
 t_MULTIPLICAR = r'\*'
@@ -81,10 +86,13 @@ t_ESTADO = r'verdadero|falso'
 t_PARA = r'PARA'
 t_MIENTRAS = r'MIENTRAS'
 t_HAZ = r'HAZ'
-t_COMENTARIOS = r'\*\*[\w*\t*\n*\ *[:punct:]*]+\*\*'
 t_COMILLA = r'\"'
 t_COMILLASIMPLE = r"\'"
 
+def t_NUMERICO(t):
+    r'[0-9]+([.][0-9]+)?'
+    t.value = int(t.value)
+    return t
 
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
@@ -97,7 +105,7 @@ t_IMPRIMIR = r'imprimir'
 t_LEER = r'leer'
 t_SI = r'SI'
 t_NO = r'NO'
-t_ignore = ' \t'  # Para ignorar los espacios
+t_ignore = ' \t\n'  # Para ignorar los espacios
 
 
 caracterilegal=""
@@ -119,3 +127,4 @@ def get_caracter_ilegal():
 def clear_caracter_ilegal():
     global caracterilegal
     caracterilegal=""
+   
