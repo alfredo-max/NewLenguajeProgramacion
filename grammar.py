@@ -236,3 +236,7 @@ def clear_gramaticaerror():
 def imprimircadena():
     global imprimircad
     return imprimircad
+
+def clear_imprimircadena():
+    global imprimircad
+    imprimircad=""

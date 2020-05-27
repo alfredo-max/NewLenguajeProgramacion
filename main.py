@@ -1,6 +1,6 @@
 from flask import Flask,render_template,request
 # import grammar
-from grammar import cargar_codigo,get_gramaticaerror,clear_gramaticaerror,imprimircadena
+from grammar import cargar_codigo,get_gramaticaerror,clear_gramaticaerror,imprimircadena,clear_imprimircadena
 from tokens import get_caracter_ilegal,clear_caracter_ilegal
 
 app = Flask(__name__)
@@ -21,6 +21,7 @@ def codigo():
     clear_gramaticaerror()
     if caracterIlegal=="" and gramaerror=="":
        imprimir=imprimircadena()
+       clear_imprimircadena()
     else:
         imprimir=""   
     return render_template('home.html',codigo=codigo ,salida=caracterIlegal,gramaerror=gramaerror,imprimir=imprimir)
