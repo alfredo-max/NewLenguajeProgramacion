@@ -49,7 +49,7 @@ def cargar_codigo(a):
             asignacion : ID ASIGNAR expr PUNTOYCOMA
         '''
         _var_names[p[1]] = p[3]
-        print("p_asignar: {}".format(_var_names[p[1]]))
+        #print("p_asignar: {}".format(_var_names[p[1]]))
 
     def p_tipodato(p):
         '''
@@ -115,10 +115,13 @@ def cargar_codigo(a):
             | expr DIVIDIR expr
             | expr MENOS expr
         '''
-        if p[2] == '+' : p[0] = p[1] + p[3]
-        elif p[2] == '*' : p[0] = p[1] * p[3]
-        elif p[2] == '/' : p[0] = p[1] / p[3]
-        elif p[2] == '-' : p[0] = p[1] - p[3]
+        try:
+            if p[2] == '+' : p[0] = p[1] + p[3]
+            elif p[2] == '*' : p[0] = p[1] * p[3]
+            elif p[2] == '/' : p[0] = p[1] / p[3]
+            elif p[2] == '-' : p[0] = p[1] - p[3]
+        except:
+            pass
 
     def p_expr_group(p):
         '''
@@ -137,24 +140,29 @@ def cargar_codigo(a):
                     | IGUALDAD
                     | DISTINTO
         '''
-        if p[1] == '<': p[0] = '<'
-        elif p[1] == '<=': p[0] = '<='
-        elif p[1] == '>': p[0] = '>'
-        elif p[1] == '>=': p[0] = '>='
-        elif p[1] == '=': p[0] = '='
-        elif p[1] == '==': p[0] = '=='
-        elif p[1] == '!=': p[0] = '!='
-
+        try:
+            if p[1] == '<': p[0] = '<'
+            elif p[1] == '<=': p[0] = '<='
+            elif p[1] == '>': p[0] = '>'
+            elif p[1] == '>=': p[0] = '>='
+            elif p[1] == '=': p[0] = '='
+            elif p[1] == '==': p[0] = '=='
+            elif p[1] == '!=': p[0] = '!='
+        except:
+            pass
 
     def p_condicion(p):
-        "condicion : expr condiciones expr"
-        if p[2] == '<': p[0] = (p[1]) < (p[3])
-        elif p[2] == '<=': p[0] = (p[1]) <= (p[3])
-        elif p[2] == '>': p[0] = (p[1]) > (p[3])
-        elif p[2] == '>=': p[0] = (p[1]) >= (p[3])
-        elif p[2] == '=': p[0] = (p[3])
-        elif p[2] == '==': p[0] = (p[1]) is (p[3])
-        elif p[2] == '!=': p[0] = (p[1]) != (p[3])
+        '''condicion : expr condiciones expr'''
+        try:
+            if p[2] == '<': p[0] = (p[1]) < (p[3])
+            elif p[2] == '<=': p[0] = (p[1]) <= (p[3])
+            elif p[2] == '>': p[0] = (p[1]) > (p[3])
+            elif p[2] == '>=': p[0] = (p[1]) >= (p[3])
+            elif p[2] == '=': p[0] = (p[3])
+            elif p[2] == '==': p[0] = (p[1]) is (p[3])
+            elif p[2] == '!=': p[0] = (p[1]) != (p[3])
+        except:
+            pass
 
     def p_sentencia_si(p):
         # si ( condicción ) { lista_sentencia }
@@ -164,15 +172,15 @@ def cargar_codigo(a):
         """
         # print("p[1]={} p[2]={} p[3]={} p[4]={} p[5]={} p[6]={} p[7]={} p[8]={} p[9]={} p[10]={} p[11]={}".format(p[1],p[2],p[3],p[4],p[5],p[6],p[7],p[8],p[9],p[10],p[11]))
         # print(p)
-        try:
-           if p[3] == True:
-               print("p[6]{}".format(p[6]))
-               p[0] = p[6]
-           else:
-               print("p[10]{}".format(p[10]))
-               p[0] = p[10]
-        except:
-           pass
+        #try:
+        #   if p[3] == True:
+               #print("p[6]{}".format(p[6]))
+        #       p[0] = p[6]
+        #   else:
+               #print("p[10]{}".format(p[10]))
+        #       p[0] = p[10]
+        #except:
+        #   pass
 
     def p_sentencia_mientras(p):
         #mientras(condición){lista_sentencia}
@@ -185,15 +193,6 @@ def cargar_codigo(a):
     def p_sentencia_para(p):
         # para(asignación condición; aignación){lista_sentencia}
         "sentencia_para : PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK"
-
-        def p_sentencia_mientras(p):
-            """
-                sentencia_mientras : MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
-                                | HAZ LBLOCK lista_sentencia  RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-            """
-
-        def p_sentencia_para(p):
-            "sentencia_para : PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK"
 
 
     def p_sentencia(p):
@@ -208,8 +207,8 @@ def cargar_codigo(a):
         """lista_sentencia : lista_sentencia sentencia
                         | sentencia
         """
-        print("p[0]={} p[1]={}".format(p[0], p[1]))
-        p[0] = p[1]
+        #print("p[0]={} p[1]={}".format(p[0], p[1]))
+        #p[0] = p[1]
 
     def p_error(p):
         global gramaticaerror
