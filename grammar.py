@@ -192,7 +192,7 @@ def cargar_codigo(a):
 
     def p_sentencia_para(p):
         # para(asignación condición; aignación){lista_sentencia}
-        "sentencia_para : PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK"
+        "sentencia_para : PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK"
 
 
     def p_sentencia(p):

@@ -44,7 +44,7 @@ Rule 32    sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBL
 Rule 33    sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
 Rule 34    sentencia_mientras -> MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
 Rule 35    sentencia_mientras -> HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-Rule 36    sentencia_para -> PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+Rule 36    sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
 Rule 37    sentencia -> sentencia_si
 Rule 38    sentencia -> sentencia_mientras
 Rule 39    sentencia -> sentencia_para
@@ -82,7 +82,7 @@ MULTIPLICAR          : 20
 NO                   : 33
 NUMERICO             : 8 15
 PARA                 : 36
-PUNTOYCOMA           : 7 13 35 36 36
+PUNTOYCOMA           : 7 13 35 36
 RBLOCK               : 32 33 33 34 35 36
 RPAREN               : 23 32 33 34 35 36
 SALTODELINEA         : 
@@ -125,7 +125,7 @@ state 0
     (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
     (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
     (7) asignacion -> . ID ASIGNAR expr PUNTOYCOMA
 
     COMENTARIOS     shift and go to state 8
@@ -163,7 +163,7 @@ state 1
     (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
     (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
 
     COMENTARIOS     shift and go to state 8
     LEER            shift and go to state 9
@@ -349,7 +349,7 @@ state 13
 
 state 14
 
-    (36) sentencia_para -> PARA . LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> PARA . LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
 
     LPAREN          shift and go to state 23
 
@@ -521,7 +521,7 @@ state 22
     (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
     (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
     (5) statement -> . asignacion
     (6) statement -> . COMENTARIOS
     (12) statement -> . LEER DOSPUNTOS expr
@@ -547,7 +547,7 @@ state 22
 
 state 23
 
-    (36) sentencia_para -> PARA LPAREN . asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> PARA LPAREN . asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
     (7) asignacion -> . ID ASIGNAR expr PUNTOYCOMA
 
     ID              shift and go to state 15
@@ -840,7 +840,7 @@ state 36
     (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
     (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
     (5) statement -> . asignacion
     (6) statement -> . COMENTARIOS
     (12) statement -> . LEER DOSPUNTOS expr
@@ -896,10 +896,28 @@ state 38
 
 state 39
 
-    (36) sentencia_para -> PARA LPAREN asignacion . PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> PARA LPAREN asignacion . condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (31) condicion -> . expr condiciones expr
+    (14) expr -> . ID
+    (15) expr -> . NUMERICO
+    (16) expr -> . CADENA
+    (17) expr -> . CARACTER
+    (18) expr -> . ESTADO
+    (19) expr -> . expr MAS expr
+    (20) expr -> . expr MULTIPLICAR expr
+    (21) expr -> . expr DIVIDIR expr
+    (22) expr -> . expr MENOS expr
+    (23) expr -> . LPAREN expr RPAREN
 
-    PUNTOYCOMA      shift and go to state 59
+    ID              shift and go to state 26
+    NUMERICO        shift and go to state 27
+    CADENA          shift and go to state 28
+    CARACTER        shift and go to state 29
+    ESTADO          shift and go to state 30
+    LPAREN          shift and go to state 31
 
+    condicion                      shift and go to state 59
+    expr                           shift and go to state 34
 
 state 40
 
@@ -1185,28 +1203,10 @@ state 58
 
 state 59
 
-    (36) sentencia_para -> PARA LPAREN asignacion PUNTOYCOMA . condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
-    (31) condicion -> . expr condiciones expr
-    (14) expr -> . ID
-    (15) expr -> . NUMERICO
-    (16) expr -> . CADENA
-    (17) expr -> . CARACTER
-    (18) expr -> . ESTADO
-    (19) expr -> . expr MAS expr
-    (20) expr -> . expr MULTIPLICAR expr
-    (21) expr -> . expr DIVIDIR expr
-    (22) expr -> . expr MENOS expr
-    (23) expr -> . LPAREN expr RPAREN
+    (36) sentencia_para -> PARA LPAREN asignacion condicion . PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
 
-    ID              shift and go to state 26
-    NUMERICO        shift and go to state 27
-    CADENA          shift and go to state 28
-    CARACTER        shift and go to state 29
-    ESTADO          shift and go to state 30
-    LPAREN          shift and go to state 31
+    PUNTOYCOMA      shift and go to state 70
 
-    condicion                      shift and go to state 70
-    expr                           shift and go to state 34
 
 state 60
 
@@ -1222,7 +1222,11 @@ state 60
     PARA            reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
     $end            reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
     RBLOCK          reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
-    PUNTOYCOMA      reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
+    NUMERICO        reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
+    CADENA          reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
+    CARACTER        reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
+    ESTADO          reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
+    LPAREN          reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
     RPAREN          reduce using rule 7 (asignacion -> ID ASIGNAR expr PUNTOYCOMA .)
 
 
@@ -1437,7 +1441,7 @@ state 66
     (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
     (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
     (5) statement -> . asignacion
     (6) statement -> . COMENTARIOS
     (12) statement -> . LEER DOSPUNTOS expr
@@ -1490,7 +1494,7 @@ state 68
     (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
     (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
     (5) statement -> . asignacion
     (6) statement -> . COMENTARIOS
     (12) statement -> . LEER DOSPUNTOS expr
@@ -1523,10 +1527,12 @@ state 69
 
 state 70
 
-    (36) sentencia_para -> PARA LPAREN asignacion PUNTOYCOMA condicion . PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA . asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (7) asignacion -> . ID ASIGNAR expr PUNTOYCOMA
 
-    PUNTOYCOMA      shift and go to state 74
+    ID              shift and go to state 15
 
+    asignacion                     shift and go to state 74
 
 state 71
 
@@ -1541,7 +1547,7 @@ state 71
     (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
     (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
     (5) statement -> . asignacion
     (6) statement -> . COMENTARIOS
     (12) statement -> . LEER DOSPUNTOS expr
@@ -1577,7 +1583,7 @@ state 72
     (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
     (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
     (5) statement -> . asignacion
     (6) statement -> . COMENTARIOS
     (12) statement -> . LEER DOSPUNTOS expr
@@ -1628,12 +1634,10 @@ state 73
 
 state 74
 
-    (36) sentencia_para -> PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA . asignacion RPAREN LBLOCK lista_sentencia RBLOCK
-    (7) asignacion -> . ID ASIGNAR expr PUNTOYCOMA
+    (36) sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion . RPAREN LBLOCK lista_sentencia RBLOCK
 
-    ID              shift and go to state 15
+    RPAREN          shift and go to state 78
 
-    asignacion                     shift and go to state 78
 
 state 75
 
@@ -1678,9 +1682,9 @@ state 77
 
 state 78
 
-    (36) sentencia_para -> PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion . RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN . LBLOCK lista_sentencia RBLOCK
 
-    RPAREN          shift and go to state 81
+    LBLOCK          shift and go to state 81
 
 
 state 79
@@ -1699,10 +1703,40 @@ state 80
 
 state 81
 
-    (36) sentencia_para -> PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN . LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK . lista_sentencia RBLOCK
+    (41) lista_sentencia -> . lista_sentencia sentencia
+    (42) lista_sentencia -> . sentencia
+    (37) sentencia -> . sentencia_si
+    (38) sentencia -> . sentencia_mientras
+    (39) sentencia -> . sentencia_para
+    (40) sentencia -> . statement
+    (32) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
+    (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
+    (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
+    (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (5) statement -> . asignacion
+    (6) statement -> . COMENTARIOS
+    (12) statement -> . LEER DOSPUNTOS expr
+    (13) statement -> . IMPRIMIR DOSPUNTOS expr PUNTOYCOMA
+    (7) asignacion -> . ID ASIGNAR expr PUNTOYCOMA
 
-    LBLOCK          shift and go to state 84
+    SI              shift and go to state 11
+    MIENTRAS        shift and go to state 12
+    HAZ             shift and go to state 13
+    PARA            shift and go to state 14
+    COMENTARIOS     shift and go to state 8
+    LEER            shift and go to state 9
+    IMPRIMIR        shift and go to state 10
+    ID              shift and go to state 15
 
+    asignacion                     shift and go to state 7
+    lista_sentencia                shift and go to state 84
+    sentencia                      shift and go to state 37
+    sentencia_si                   shift and go to state 4
+    sentencia_mientras             shift and go to state 5
+    sentencia_para                 shift and go to state 6
+    statement                      shift and go to state 38
 
 state 82
 
@@ -1717,7 +1751,7 @@ state 82
     (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
     (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
     (5) statement -> . asignacion
     (6) statement -> . COMENTARIOS
     (12) statement -> . LEER DOSPUNTOS expr
@@ -1759,9 +1793,8 @@ state 83
 
 state 84
 
-    (36) sentencia_para -> PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK . lista_sentencia RBLOCK
-    (41) lista_sentencia -> . lista_sentencia sentencia
-    (42) lista_sentencia -> . sentencia
+    (36) sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia . RBLOCK
+    (41) lista_sentencia -> lista_sentencia . sentencia
     (37) sentencia -> . sentencia_si
     (38) sentencia -> . sentencia_mientras
     (39) sentencia -> . sentencia_para
@@ -1770,13 +1803,14 @@ state 84
     (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
     (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
     (5) statement -> . asignacion
     (6) statement -> . COMENTARIOS
     (12) statement -> . LEER DOSPUNTOS expr
     (13) statement -> . IMPRIMIR DOSPUNTOS expr PUNTOYCOMA
     (7) asignacion -> . ID ASIGNAR expr PUNTOYCOMA
 
+    RBLOCK          shift and go to state 86
     SI              shift and go to state 11
     MIENTRAS        shift and go to state 12
     HAZ             shift and go to state 13
@@ -1787,8 +1821,7 @@ state 84
     ID              shift and go to state 15
 
     asignacion                     shift and go to state 7
-    lista_sentencia                shift and go to state 86
-    sentencia                      shift and go to state 37
+    sentencia                      shift and go to state 58
     sentencia_si                   shift and go to state 4
     sentencia_mientras             shift and go to state 5
     sentencia_para                 shift and go to state 6
@@ -1806,7 +1839,7 @@ state 85
     (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
     (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
     (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
+    (36) sentencia_para -> . PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
     (5) statement -> . asignacion
     (6) statement -> . COMENTARIOS
     (12) statement -> . LEER DOSPUNTOS expr
@@ -1832,39 +1865,19 @@ state 85
 
 state 86
 
-    (36) sentencia_para -> PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia . RBLOCK
-    (41) lista_sentencia -> lista_sentencia . sentencia
-    (37) sentencia -> . sentencia_si
-    (38) sentencia -> . sentencia_mientras
-    (39) sentencia -> . sentencia_para
-    (40) sentencia -> . statement
-    (32) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
-    (33) sentencia_si -> . SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK
-    (34) sentencia_mientras -> . MIENTRAS LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK
-    (35) sentencia_mientras -> . HAZ LBLOCK lista_sentencia RBLOCK MIENTRAS LPAREN condicion RPAREN PUNTOYCOMA
-    (36) sentencia_para -> . PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK
-    (5) statement -> . asignacion
-    (6) statement -> . COMENTARIOS
-    (12) statement -> . LEER DOSPUNTOS expr
-    (13) statement -> . IMPRIMIR DOSPUNTOS expr PUNTOYCOMA
-    (7) asignacion -> . ID ASIGNAR expr PUNTOYCOMA
+    (36) sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .
 
-    RBLOCK          shift and go to state 88
-    SI              shift and go to state 11
-    MIENTRAS        shift and go to state 12
-    HAZ             shift and go to state 13
-    PARA            shift and go to state 14
-    COMENTARIOS     shift and go to state 8
-    LEER            shift and go to state 9
-    IMPRIMIR        shift and go to state 10
-    ID              shift and go to state 15
+    COMENTARIOS     reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
+    LEER            reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
+    IMPRIMIR        reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
+    ID              reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
+    SI              reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
+    MIENTRAS        reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
+    HAZ             reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
+    PARA            reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
+    $end            reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
+    RBLOCK          reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
 
-    asignacion                     shift and go to state 7
-    sentencia                      shift and go to state 58
-    sentencia_si                   shift and go to state 4
-    sentencia_mientras             shift and go to state 5
-    sentencia_para                 shift and go to state 6
-    statement                      shift and go to state 38
 
 state 87
 
@@ -1880,22 +1893,6 @@ state 87
     PARA            reduce using rule 33 (sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK .)
     $end            reduce using rule 33 (sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK .)
     RBLOCK          reduce using rule 33 (sentencia_si -> SI LPAREN condicion RPAREN LBLOCK lista_sentencia RBLOCK NO LBLOCK lista_sentencia RBLOCK .)
-
-
-state 88
-
-    (36) sentencia_para -> PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .
-
-    COMENTARIOS     reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
-    LEER            reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
-    IMPRIMIR        reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
-    ID              reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
-    SI              reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
-    MIENTRAS        reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
-    HAZ             reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
-    PARA            reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
-    $end            reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
-    RBLOCK          reduce using rule 36 (sentencia_para -> PARA LPAREN asignacion PUNTOYCOMA condicion PUNTOYCOMA asignacion RPAREN LBLOCK lista_sentencia RBLOCK .)
 
 WARNING: 
 WARNING: Conflicts:
