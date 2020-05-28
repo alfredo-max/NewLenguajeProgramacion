@@ -41,13 +41,13 @@
 <hr>
         <section>
             <div class="container">
-                <div class="row">
+                <div class="row alert-primary">
                     <div class="col-md-6">
                         <form method="POST" action="{{url_for('codigo')}}">
-                        <label for="exampleFormControlTextarea1">escriba su codigo</label>
-                        <textarea class="form-control " id="code" name="code" rows="20">{{codigo}}</textarea>
-                        <input type="submit" value="Enviar">
-                    </form>
+                            <label for="exampleFormControlTextarea1"><h3>Escriba su codigo</h3></label>
+                            <textarea class="form-control " id="code" name="code" rows="20">{{codigo}}</textarea>
+                            <input type="submit" value="Enviar">
+                        </form>
                     </div><!--Este escript es solo para prbar el editor
                         $(function() {
                                 $('div#froala-editor').froalaEditor({
@@ -65,35 +65,102 @@
                         <form action="">
                             <div class="form-group">
                                 <!-- Aqui va el codigo de js -->
-                                <label for="exampleFormControlTextarea1">Salida</label>
+                                <label for="exampleFormControlTextarea1"><h3>Salida</h3></label>
                                 <textarea class="form-control disabled" id="exampleFormControlTextarea1" rows="20" readonly>{{salida}}{{gramaerror}}{{imprimir}}</textarea>
                             </div>
                         </form>
                     </div>
                 </div>
+            </div><br><br>
+            <div class="container">
+                <div class="row alert-primary">
+                    <div class="col-md-6">
+                        <label for="exampleFormControlTextarea1"><h3>Ejemplo de código</h3></label>
+                        <textarea class="form-control " id="code2" name="code2" rows="20">
+{{"**Esto es un comentario**
+a = 4;
+b=3;
+
+si(a>b){
+  imprimir:a;
+}no{
+  imprimir:b;
+}
+
+para(b=1;b!=4;b=b+1){
+  imprimir:b;
+}
+
+mientras(a>1){
+    imprime:a;
+    a = a - 1;
+}
+
+haz{
+    a = a + 1
+}mientras(a<5);"}}
+                        </textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="exampleFormControlTextarea1"><h3>Documentación</h3></label>
+                        <div><p>
+                            <h5>Asignaciones a variables:</h5>
+                            Se dice la variable en la que se va a guardar el valor, 
+                            seguido del signo igual y del valor a guardar en la variable,
+                            los nombres de variables inician por una letra o guión bajo. se puede crear una variable de
+                            tipo cadena, numérico o booleano (verdadero/falso), al final se pone punto y coma<br>
+                            <h5>Operaciones:</h5>
+                            Se pueden operar variables, se pueden hacer sumas '+', restas '-', divición '/' y multiplicación '*'. <br>
+                            <h5>Imprimir:</h5>
+                            Para imprimir solo se debe escribir la palabra reservada 'imprime' seguido de dos puntos y el valor a imprimir,
+                             dicho valor puede ser el de una variable un numero, una cadena o un esstado booleano. <br>
+                            <h5>Sentencia si y si no:</h5>
+                            Se escribe la palabra reservada 'si', seguido entre parentesis se escribe una condición,
+                            dicha condición puede ser: mayor que (>), menor que (<), igual a (==), diferente de (!=),
+                            mayor o igual (>=), y tambien menor o igual (<=).<br>
+                            Segido se escribirá dentro de bloques '{}' las sentencias a ejecutar. En  caso de no complirse la
+                            condición, se puede colocar luego de cerrar los bloques la palabra reservada 'no' y seguido escribir en
+                            bloques un código que se ejecutará. <br>
+                            <h5>Sentencia para:</h5>
+                            Primero se escribe la palabra reservada 'para', seguido entres parentesis se debe iniciar una variable, 
+                            escribir una condición, y por último una asignación al valor de la variable para cuando se ejecute el ciclo,
+                            luego dentro de un bloque '{}' se debe escribir las sentencias a ejecutar por el ciclo. <br>
+                            <h5>Sentencia mientras:</h5>
+                            Se escribe la palabra  reservada 'mientras', luego dentro de parentesis se escribe una condición, 
+                            y al final en un bloque se colocan las sentencias a ejecutar. <br>
+                            <h5>Sentencia haz:</h5>
+                            Funciona como el mientras, solo que en este caso se escribe primero la palabra reservada 'haz', seguido se 
+                            escribe un bloque '{}' con instrucciones, y al final del bloque se escribe la palabra mientras seguido de un parentesis 
+                            con la condición y al final punto y coma. Esta a diferencia del mientras ejecutará por lo menos una vez el bloque de 
+                            código. <br><br>
+                            <h5>A tener en cuenta:</h5>
+                            Se puede anidar código, ejemplo, un if dentro de un for, un for dentro de un mientras y así con todas las sentencias.
+                            <h5></h5>
+                        </p></div>
+                    </div>
+                </div>
             </div>
-           
-        </section>
-        <footer>
-            <div class="bg-primary">
-              <div class="row">
-                <div class="col-md-4 text-white" >
-                     <h5>ALFREDO ALMARALES MANGA</h5>     
-                     <h5>DANIEL VEGA CAMARGO</h5>   
-                     <h5>DANIEL FONTALVO ORTIZ</h5>   
-                     <h5>JULIO FUENTES MARIO</h5> 
-                </div>
-                <div class="col-md-4">
-                    <img src="{{ url_for('static', filename='images/universidad.png') }}">
-                </div>
-                <div class="col-md-4 text-white">
-                  <h4>INGENIERÍA DE SISTEMAS</h4>     
-                  <h4>COMPILADORES</h4>   
-                  <h4>2020-1</h4>   
-                 </div>
-                </div>
-                </div>
-             </footer>
+        </section><br>
+<footer>
+    <div class="bg-primary">
+        <div class="row">
+            <div class="col-md-4 text-white" >
+                <h5>ALFREDO ALMARALES MANGA</h5>     
+                <h5>DANIEL VEGA CAMARGO</h5>   
+                <h5>DANIEL FONTALVO ORTIZ</h5>   
+                <h5>JULIO FUENTES MARIO</h5> 
+            </div>
+            <div class="col-md-4">
+                <img src="{{ url_for('static', filename='images/universidad.png') }}">
+            </div>
+            <div class="col-md-4 text-white">
+                <h4>INGENIERÍA DE SISTEMAS</h4>     
+                <h4>COMPILADORES</h4>   
+                <h4>2020-1</h4>   
+            </div>
+        </div>
+    </div>
+</footer>
 
 
         <script>
@@ -104,6 +171,12 @@
             theme: 'icecoder',
             // esto deshabilita la opción de reescribir
             readOnly: false,//true,
+            });
+
+            var ejem = CodeMirror.fromTextArea(document.getElementById("code2"), {
+                lineNumbers: true,
+                theme: 'icecoder',
+                readOnly: true,
             });
         </script>  
     </body>
