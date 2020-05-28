@@ -99,7 +99,7 @@ def t_ID(t):
     if (t.value in palabrasReservadas):
         t.type = palabrasReservadas[t.value]
     return t
-    
+
 def t_SALTODELINEAe(t):
      r'\n+'
      t.lexer.lineno += len(t.value)
