@@ -20,7 +20,7 @@ def codigo():
     gramaerror=get_gramaticaerror()
     clear_gramaticaerror()
     if caracterIlegal=="" and gramaerror=="":
-       imprimir=imprimircadena()
+       imprimir=str('Compilado...\n')+str(imprimircadena())
        clear_imprimircadena()
     else:
         imprimir=""   
