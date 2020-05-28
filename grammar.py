@@ -5,7 +5,7 @@ from ply.yacc import yacc
 gramaticaerror=""
 imprimircad=""
 def cargar_codigo(a):
-    # a="a=5; \n b=4;"
+    
     lexer = lex.lex()
 
     lexer.input(a)
@@ -109,13 +109,10 @@ def cargar_codigo(a):
 
     def p_expr_opbin(p):
         '''
-        expr : NUMERICO MAS NUMERICO
-            | NUMERICO MULTIPLICAR NUMERICO
-            | NUMERICO DIVIDIR NUMERICO
-            | NUMERICO MENOS NUMERICO
-            | NUMERICO MAS expr
-            | expr MAS NUMERICO
-            | expr MAS expr
+        expr : expr MAS expr
+            | expr MULTIPLICAR expr
+            | expr DIVIDIR expr
+            | expr MENOS expr
         '''
         #if p[2] == '+' : p[0] = p[1] + p[3]
         #elif p[2] == '*' : p[0] = p[1] * p[3]
@@ -212,7 +209,7 @@ def cargar_codigo(a):
         """
         #print("p[0]={} p[1]={}".format(p[0], p[1]))
         #p[0] = p[1]
-
+        
     def p_error(p):
         global gramaticaerror
         global caracterilegal
